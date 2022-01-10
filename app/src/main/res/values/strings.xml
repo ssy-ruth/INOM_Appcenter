@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">inomTest</string>
+    <string name="singupID">학번을 입력해주세요:)</string>
+    <string name="singupPW">비밀번호를 입력해주세요:)</string>
+    <string name="singupName">닉네임을 입력해주세요:)</string>
+    <string name="singupName_ex">인천대 중고장터는 익명으로 운영됩니다!</string>
+    <string name="singupFinish">환영합니다!</string>
+    <string name="singupMain">인천대학교 중고장터</string>
+    <string name="singupMain_ex">안전한 인천대 중고거래\n지금 학생임을 인증하고 시작해보세요!</string>
+    <string name="singupToLogin1">이미 계정이 있나요?</string>
+    <string name="singupToLogin2">로그인하기</string>
+    <string name="loginToSignup">회원가입</string>
+</resources>
