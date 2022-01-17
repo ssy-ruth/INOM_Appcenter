@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/signupMainFragment">
 
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.inomtest.fragment.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_signupFinishFragment"
+            app:destination="@id/signupFinishFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupFinishFragment"
+        android:name="com.example.inomtest.fragment.SignupFinishFragment"
+        android:label="fragment_signup_finish"
+        tools:layout="@layout/fragment_signup_finish" />
+    <fragment
+        android:id="@+id/signupIDFragment"
+        android:name="com.example.inomtest.fragment.SignupIDFragment"
+        android:label="fragment_signup_id"
+        tools:layout="@layout/fragment_signup_id" >
+        <action
+            android:id="@+id/action_signupIDFragment_to_signupPWFragment"
+            app:destination="@id/signupPWFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupMainFragment"
+        android:name="com.example.inomtest.fragment.SignupMainFragment"
+        android:label="fragment_signup_main"
+        tools:layout="@layout/fragment_signup_main" >
+        <action
+            android:id="@+id/action_signupMainFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_signupMainFragment_to_signupIDFragment"
+            app:destination="@id/signupIDFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupNameFragment"
+        android:name="com.example.inomtest.fragment.SignupNameFragment"
+        android:label="fragment_signup_name"
+        tools:layout="@layout/fragment_signup_name" >
+        <action
+            android:id="@+id/action_signupNameFragment_to_signupFinishFragment"
+            app:destination="@id/signupFinishFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupPWFragment"
+        android:name="com.example.inomtest.fragment.SignupPWFragment"
+        android:label="fragment_signup_pw"
+        tools:layout="@layout/fragment_signup_pw" >
+        <action
+            android:id="@+id/action_signupPWFragment_to_signupNameFragment"
+            app:destination="@id/signupNameFragment" />
+    </fragment>
 </navigation>
