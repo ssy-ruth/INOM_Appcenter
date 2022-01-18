@@ -5,13 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.inomtest.R
+import com.example.inomtest.databinding.FragmentSignupNameBinding
+import com.example.inomtest.databinding.FragmentSignupPwBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
 /**
  * A simple [Fragment] subclass.
  * Use the [SignupNameFragment.newInstance] factory method to
@@ -37,6 +40,7 @@ class SignupNameFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_signup_name, container, false)
     }
+
 
     companion object {
         /**

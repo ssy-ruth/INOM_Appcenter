@@ -5,20 +5,19 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/signupMainFragment">
 
+
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.inomtest.fragment.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        android:id="@+id/signupMainFragment"
+        android:name="com.example.inomtest.fragment.SignupMainFragment"
+        android:label="fragment_signup_main"
+        tools:layout="@layout/fragment_signup_main" >
         <action
-            android:id="@+id/action_loginFragment_to_signupFinishFragment"
-            app:destination="@id/signupFinishFragment" />
+            android:id="@+id/action_signupMainFragment_to_signupIDFragment"
+            app:destination="@id/signupIDFragment" />
+        <action
+            android:id="@+id/action_signupMainFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/signupFinishFragment"
-        android:name="com.example.inomtest.fragment.SignupFinishFragment"
-        android:label="fragment_signup_finish"
-        tools:layout="@layout/fragment_signup_finish" />
     <fragment
         android:id="@+id/signupIDFragment"
         android:name="com.example.inomtest.fragment.SignupIDFragment"
@@ -29,16 +28,13 @@
             app:destination="@id/signupPWFragment" />
     </fragment>
     <fragment
-        android:id="@+id/signupMainFragment"
-        android:name="com.example.inomtest.fragment.SignupMainFragment"
-        android:label="fragment_signup_main"
-        tools:layout="@layout/fragment_signup_main" >
+        android:id="@+id/signupPWFragment"
+        android:name="com.example.inomtest.fragment.SignupPWFragment"
+        android:label="fragment_signup_pw"
+        tools:layout="@layout/fragment_signup_pw" >
         <action
-            android:id="@+id/action_signupMainFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_signupMainFragment_to_signupIDFragment"
-            app:destination="@id/signupIDFragment" />
+            android:id="@+id/action_signupPWFragment_to_signupNameFragment"
+            app:destination="@id/signupNameFragment" />
     </fragment>
     <fragment
         android:id="@+id/signupNameFragment"
@@ -50,12 +46,13 @@
             app:destination="@id/signupFinishFragment" />
     </fragment>
     <fragment
-        android:id="@+id/signupPWFragment"
-        android:name="com.example.inomtest.fragment.SignupPWFragment"
-        android:label="fragment_signup_pw"
-        tools:layout="@layout/fragment_signup_pw" >
-        <action
-            android:id="@+id/action_signupPWFragment_to_signupNameFragment"
-            app:destination="@id/signupNameFragment" />
-    </fragment>
+        android:id="@+id/signupFinishFragment"
+        android:name="com.example.inomtest.fragment.SignupFinishFragment"
+        android:label="fragment_signup_finish"
+        tools:layout="@layout/fragment_signup_finish" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.inomtest.fragment.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>
