@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spineer_category">
+        <item>전공서적</item>
+        <item>생활용품</item>
+        <item>전자기기</item>
+    </string-array>
+</resources>
