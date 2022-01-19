@@ -6,11 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".fragment.SignupMainFragment">
 
+    <ImageView
+        android:id="@+id/signupLogo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline08"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/signupMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="460dp"
+        android:layout_marginTop="35dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/singupMain"
         android:textColor="@color/black"
@@ -18,14 +27,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/signupLogo" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="103dp"
         android:gravity="center_horizontal"
         android:text="@string/singupMain_ex"
         android:textColor="@color/gray"
@@ -36,29 +43,15 @@
 
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textviewTologin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="@string/singupToLogin1"
         android:textColor="@color/gray"
         android:textSize="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signupMain_btn" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="119dp"
-        android:text="@string/singupToLogin2"
-        android:textColor="@color/gray"
-        android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signupMain_btn" />
 
     <Button
@@ -70,7 +63,14 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signupMain" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline08" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline08"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
