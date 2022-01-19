@@ -7,8 +7,7 @@
     <string name="singupFinish">환영합니다!</string>
     <string name="singupMain">인천대학교 중고장터</string>
     <string name="singupMain_ex">안전한 인천대 중고거래\n지금 학생임을 인증하고 시작해보세요!</string>
-    <string name="singupToLogin1">이미 계정이 있나요?</string>
-    <string name="singupToLogin2">로그인하기</string>
+    <string name="singupToLogin1">이미 계정이 있나요?\t\t\t로그인하기</string>
     <string name="loginToSignup">회원가입</string>
     <string name="productIntroUserName">인천대생</string>
     <string name="productIntroBtn">채팅으로 거래하기</string>

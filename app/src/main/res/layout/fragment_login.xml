@@ -7,6 +7,15 @@
     tools:context=".fragment.LoginFragment">
 
 
+    <ImageView
+        android:id="@+id/signupLogo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/loginID_edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/loginToSignup"
         android:layout_width="wrap_content"
@@ -16,7 +25,6 @@
         android:textColor="@color/gray"
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_btn" />
 
@@ -24,29 +32,26 @@
         android:id="@+id/loginID_edit"
         android:layout_width="340dp"
         android:layout_height="55dp"
-        android:layout_marginTop="296dp"
         android:ems="10"
         android:hint="학번을 입력해주세요."
         android:inputType="numberPassword"
         android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/loginPW_edit" />
 
     <EditText
         android:id="@+id/loginPW_edit"
         android:layout_width="340dp"
         android:layout_height="55dp"
-        android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="비밀번호를 입력해주세요."
         android:inputType="textPassword"
         android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginID_edit" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline05" />
 
     <Button
         android:id="@+id/login_btn"
@@ -56,9 +61,21 @@
         android:text="로그인"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginPW_edit" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline07" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline05"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline07"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
