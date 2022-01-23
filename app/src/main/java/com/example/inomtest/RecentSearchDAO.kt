@@ -16,3 +16,4 @@ interface RecentSearchDAO {
 
     @Delete
     fun delete(recentWord: RecentSearchEntity)
+}
