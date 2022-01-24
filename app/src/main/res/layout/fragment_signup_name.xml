@@ -10,27 +10,25 @@
         android:id="@+id/signupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="340dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/singupName"
         android:textColor="@color/black"
         android:textSize="17dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.131"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/signupName_edit"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:text="@string/singupName_ex"
         android:textColor="@color/gray"
         android:textSize="12dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="7dp"
         app:layout_constraintBottom_toTopOf="@+id/signupName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.148"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"  />
 
     <EditText
         android:id="@+id/signupName_edit"
@@ -41,7 +39,7 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signupName" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline05" />
 
     <Button
         android:id="@+id/signupName_btn"
@@ -52,7 +50,20 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signupName_edit" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline08" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline05"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline08"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
