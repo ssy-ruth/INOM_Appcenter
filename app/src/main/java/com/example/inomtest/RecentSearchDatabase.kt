@@ -1,9 +1,9 @@
 package com.example.inomtest
 
-import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.inomtest.fragment.SearchFragment
 
 
 @Database(entities = arrayOf(RecentSearchEntity::class), version = 1)//Entity파일이든, 데이터베이스에 수정이 있을 때 버전을 올려주어야 해요!
@@ -14,7 +14,7 @@ abstract class RecentSearchDatabase : RoomDatabase() {
     companion object {
         var INSTANCE : RecentSearchDatabase? = null
 
-        fun getInstance(context:Context) : RecentSearchDatabase?{
+        fun getInstance(context: SearchFragment) : RecentSearchDatabase?{
             if (INSTANCE == null){
                 synchronized(RecentSearchDatabase::class){
                     INSTANCE= Room.databaseBuilder(context.applicationContext,

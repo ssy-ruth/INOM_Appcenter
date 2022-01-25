@@ -6,6 +6,7 @@
     android:layout_height="30dp">
 
     <ImageView
+        android:id="@+id/recentWordDelete"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:src="@drawable/ic_delete"
@@ -15,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/textview_recentWord"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:text="@string/searchRecentWord"
