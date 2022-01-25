@@ -23,7 +23,6 @@ class SearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        db = RecentSearchDatabase.getInstance(this)!!
         binding.searchBtn.setOnClickListener {
             var recentWord = RecentSearchEntity(null,)
             insertRecentWord()

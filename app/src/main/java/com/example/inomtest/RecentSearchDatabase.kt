@@ -1,5 +1,6 @@
 package com.example.inomtest
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -14,7 +15,7 @@ abstract class RecentSearchDatabase : RoomDatabase() {
     companion object {
         var INSTANCE : RecentSearchDatabase? = null
 
-        fun getInstance(context: SearchFragment) : RecentSearchDatabase?{
+        fun getInstance(context: Context) : RecentSearchDatabase?{
             if (INSTANCE == null){
                 synchronized(RecentSearchDatabase::class){
                     INSTANCE= Room.databaseBuilder(context.applicationContext,
