@@ -8,15 +8,19 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.example.inomtest.R
+import com.example.inomtest.databinding.FragmentHomeBinding
+import com.example.inomtest.databinding.FragmentProductRegiBinding
 
 
 class ProductRegiFragment : Fragment() {
-    private lateinit var spinner_category: Spinner
+    private var _binding: FragmentProductRegiBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        spinner_category.findViewById<Spinner>(R.id.regi_category)
 
         setupSpinnerCategory()
     }
@@ -25,11 +29,11 @@ class ProductRegiFragment : Fragment() {
         val items = resources.getStringArray(R.array.spineer_category)
         val adapter =
             activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_dropdown_item, items) }
-        spinner_category.adapter = adapter
+        _binding?.regiCategory?.adapter = adapter
     }
 
     private fun setupSpinnerHandler() {
-        spinner_category.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+       _binding?.regiCategory?.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, positin: Int, id: Long) {
 
             }
@@ -45,8 +49,17 @@ class ProductRegiFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        _binding = FragmentProductRegiBinding.inflate(inflater, container, false)
 
-        return inflater.inflate(R.layout.fragment_product_regi, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.regiBackButton.setOnClickListener {
+            it.findNavController().navigate(R.id.action_productRegiFragment_to_homeFragment)
+        }
     }
 
     companion object {

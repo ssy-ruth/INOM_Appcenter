@@ -7,14 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inomtest.MainViewModel
+import com.example.inomtest.R
 import com.example.inomtest.RecyclerItemAdapter
 import com.example.inomtest.databinding.FragmentHomeBinding
 
 
 class HomeFragment : Fragment() {
+    val productRegiFragment = ProductRegiFragment()
+
+
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -75,6 +81,8 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+
+        initNavigationBar(view)
     }
 
 
@@ -87,5 +95,35 @@ class HomeFragment : Fragment() {
 
                 }
             }
+    }
+
+    private fun initNavigationBar(view: View) {
+        binding.homeBottomNavBar.run {
+            setOnNavigationItemSelectedListener {
+                when(it.itemId) {
+                    R.id.menu_chatting -> {
+                        view.findNavController().navigate(R.id.action_homeFragment_to_chattingFragment)
+                    }
+
+                    R.id.menu_home -> {
+
+                    }
+
+                    R.id.menu_regi -> {
+                        view.findNavController().navigate(R.id.action_homeFragment_to_productRegiFragment)
+                    }
+
+                    R.id.menu_noti -> {
+
+                    }
+
+                    R.id.menu_myPage -> {
+                        view.findNavController().navigate(R.id.action_homeFragment_to_myPageFragment)
+                    }
+                }
+                true
+            }
+            selectedItemId = R.id.fragment_home
+        }
     }
 }
