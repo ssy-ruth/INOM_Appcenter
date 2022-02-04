@@ -36,10 +36,6 @@ class SignupFinishFragment : Fragment() {
         binding.signupFinishBtn.setOnClickListener{
             it.findNavController().navigate(R.id.action_signupFinishFragment_to_homeFragment)
         }
-        binding.button.setOnClickListener{
-            it.findNavController().navigate(R.id.action_signupFinishFragment_to_searchFragment)
-        }
-
     }
     override fun onDestroyView() {
         super.onDestroyView()
