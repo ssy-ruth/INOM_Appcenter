@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.example.inomtest.databinding.ActivityMainBinding
+import com.example.inomtest.fragment.ProductRegiFragment
+import com.example.inomtest.fragment.SignupMainFragment
 
 class MainActivity : AppCompatActivity() {
 

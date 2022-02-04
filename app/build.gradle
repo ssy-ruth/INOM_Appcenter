@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation("androidx.activity:activity-ktx:1.4.0")
     implementation 'androidx.appcompat:appcompat:1.3.0'
@@ -49,6 +50,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    // Kotlin
     def nav_version = "2.3.5"
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
@@ -64,5 +66,10 @@ dependencies {
     // For control over item selection of both touch and mouse driven selection
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.6.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
 
 }
