@@ -53,6 +53,9 @@
         <action
             android:id="@+id/action_signupFinishFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_signupFinishFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -71,4 +74,9 @@
         android:name="com.example.inomtest.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+    <activity
+        android:id="@+id/searchFragment"
+        android:name="com.example.inomtest.fragment.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
 </navigation>

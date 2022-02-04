@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.inomtest.fragment.SearchFragment
 
 
-@Database(entities = arrayOf(RecentSearchEntity::class), version = 1)//Entity파일이든, 데이터베이스에 수정이 있을 때 버전을 올려주어야 해요!
+@Database(entities = arrayOf(RecentSearchEntity::class), version = 1)//Entity파일이든, 데이터베이스에 수정이 있을 때 버전을 올려줘야 합니다.
 abstract class RecentSearchDatabase : RoomDatabase() {
     //DAO를 반환하는 추상화메소드
     abstract fun recentSearchDAO() : RecentSearchDAO

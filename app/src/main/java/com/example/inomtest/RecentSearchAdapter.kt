@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inomtest.databinding.ItemSearchRecentBinding
 
-class RecentSearchAdapter(val context: Context,
-                          val list: List<RecentSearchEntity>):
+class RecentSearchAdapter(//val context: Context,
+                          var list: List<RecentSearchEntity>
+                        //,var onDeleteListener: OnDeleteListener
+                          ):
     RecyclerView.Adapter<RecentSearchAdapter.RecentSearchViewHolder>() {
     private var _binding: ItemSearchRecentBinding? = null
     private val binding get() = _binding!!
@@ -18,7 +20,7 @@ class RecentSearchAdapter(val context: Context,
         return list.size
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentSearchViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.item_search_recent,parent,false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_search_recent,parent,false)
 
         return RecentSearchViewHolder(itemView)
     }
@@ -28,6 +30,7 @@ class RecentSearchAdapter(val context: Context,
         holder.recentWord.text = recentWord.recentWord
         holder.recentWordDelete.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
+                //onDeleteListener.onDeleteListener(recentWord)
             }
         })
     }
