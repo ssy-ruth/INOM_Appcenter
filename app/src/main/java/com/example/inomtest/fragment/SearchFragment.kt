@@ -1,8 +1,10 @@
 package com.example.inomtest.fragment
 
-import android.annotation.SuppressLint
-import android.os.AsyncTask
+import android.app.SearchManager
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,22 +13,21 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.Room
 import com.example.inomtest.*
 import com.example.inomtest.databinding.FragmentSearchBinding
-import com.example.inomtest.databinding.ItemSearchRecentBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 //@SuppressLint("StaticFieldLeak")
 class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDeleteListener {
     private lateinit var binding: FragmentSearchBinding
-    //private val binding get() = _binding!!
-    private var _binding1: ItemSearchRecentBinding? = null
-    private val binding1 get() = _binding1!!
     lateinit var navController: NavController
-    lateinit var searchAdapter: RecentSearchAdapter
-    lateinit var db : RecentSearchDatabase
-    lateinit var searchDAO: RecentSearchDAO
+    private lateinit var searchAdapter: RecentSearchAdapter
+    private lateinit var db : RecentSearchDatabase
+    private lateinit var searchDAO: RecentSearchDAO
     val recentWordList = mutableListOf<RecentSearchEntity>()
     //val recentWordList:List<RecentSearchEntity> = listOf<RecentSearchEntity>()
-    private lateinit var searchView: SearchView
     private lateinit var searchViewEditText: EditText
 
 
@@ -38,63 +39,62 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
         //binding.RecentWordList.layoutManager = GridLayoutManager(this,2)
         //db= RecentSearchDatabase.getInstance(this)!!
         db = Room.databaseBuilder(this,RecentSearchDatabase::class.java,"room_db")
-            .allowMainThreadQueries()//공부할때만 사용,,,, 수정해야함
             .build()
         searchDAO = db.recentSearchDAO()
-       // recentWordList.addAll(db.recentSearchDAO().getAll())//갱신
+        // recentWordList.addAll(db.recentSearchDAO().getAll())//갱신
         searchAdapter = RecentSearchAdapter(recentWordList)
+
         refreshAdapter()
 
-        with(binding){
+        onQueryTextChange(newText = null)
+        with(binding) {
             RecentWordList.adapter = searchAdapter
-            RecentWordList.layoutManager = GridLayoutManager(this@SearchFragment,2)
+            RecentWordList.layoutManager = GridLayoutManager(this@SearchFragment, 2)
 
-            searchBtn.setOnClickListener{
+            searchBtn.setOnClickListener {
                 val content = searchViewEditText.text.toString()
-                if (content.isNotEmpty()){
-                    val recentWord1 = RecentSearchEntity(null,content)
-                    searchDAO.insert(recentWord1)
-
-                    refreshAdapter()
+                if (content.isNotEmpty()) {
+                    val recentWord1 = RecentSearchEntity(null, content)
+                    insertWord(recentWord1)
                 }
             }
         }
-        binding.searchView.apply {
-            this.queryHint="검색어를 입력해주세요."
-            this.setOnQueryTextListener(this@SearchFragment)
-            searchViewEditText = this.findViewById(androidx.appcompat.R.id.search_src_text)
-        }
-        binding.searchBtn.setOnClickListener {//room으로 하게 되어서 검색 버튼을 누르면 room에 검색어가 저장되는 식으로 하였지만 searchview에 최근 검색어 저장기능이 있음.
-                                            //이게 왜 고민이냐면 searchview 위젯은 키보드에 있는 검색 버튼에 접근이 가능한데 room은 오직 화면의 버튼만 가능하다는 점이 다름..
-                                            //키보드의 검색 버튼을 없애던지(searchview말고 edittext를 사용하거나 searchview에 없애는 명령어가 있다면 사용)
-                                            //searchcview에서 제공되는 키보드버튼을 클릭리스너 식으로 연결하여 room과 연결시키던지....
-            val recentWord = RecentSearchEntity(null, searchViewEditText.text.toString())
-            //insertRecentWord(recentWord)//binding1.textviewRecentWord
-        }
+
+
     }
     fun refreshAdapter(){
-        recentWordList.clear()
-        recentWordList.addAll(searchDAO.getAll())
-        searchAdapter.notifyDataSetChanged()
+        CoroutineScope(Dispatchers.IO).launch {
+            recentWordList.clear()
+            recentWordList.addAll(searchDAO.getAll())
+            withContext(Dispatchers.Main){
+                searchAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+    fun insertWord(searchWord:RecentSearchEntity){
+        CoroutineScope(Dispatchers.IO).launch {
+            searchDAO.insert(searchWord)
+            refreshAdapter()
+        }
     }
 
 
 
-/*
-    fun insertRecentWord(recentWord: RecentSearchEntity) {
+    /*
+        fun insertRecentWord(recentWord: RecentSearchEntity) {
 
-        val insertTask = object : AsyncTask<Unit, Unit, Unit>(){
-            override fun doInBackground(vararg params: Unit?) {
-                db.recentSearchDAO().insert(recentWord)
+            val insertTask = object : AsyncTask<Unit, Unit, Unit>(){
+                override fun doInBackground(vararg params: Unit?) {
+                    db.recentSearchDAO().insert(recentWord)
+                }
+
+                override fun onPostExecute(result: Unit?) {
+                    super.onPostExecute(result)
+                    getAllRecentWord()
+                }
             }
 
-            override fun onPostExecute(result: Unit?) {
-                super.onPostExecute(result)
-                getAllRecentWord()
-            }
-        }
-
-    }*/
+        }*/
     /*
     fun getAllRecentWord(){
 
@@ -131,11 +131,23 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        TODO("Not yet implemented")
+        Log.d(TAG, "PhotoCollectionActivity - onQueryTextSubmit() called / query: $query")
+
+        return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        TODO("Not yet implemented")
+        Log.d(TAG, "PhotoCollectionActivity - onQueryTextChange() called / newText: $newText")
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        binding.searchView.apply {
+            this.queryHint="검색어를 입력해주세요."
+            this.setOnQueryTextListener(this@SearchFragment)
+            //searchViewEditText = this.findViewById(androidx.appcompat.R.id.search_src_text) //=>NPE, api31부터 막혔다고 함
+            //searchViewEditText.setText("")
+        }
+        searchViewEditText.apply {
+        }
+        return true
     }
 
     override fun onDeleteListener(recentWord: RecentSearchEntity) {
