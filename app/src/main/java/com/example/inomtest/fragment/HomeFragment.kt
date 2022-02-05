@@ -83,6 +83,11 @@ class HomeFragment : Fragment() {
         })
 
         initNavigationBar(view)
+
+        //검색버튼 -> 검색화면이동 추가했습니다!
+        binding.searchBtn.setOnClickListener{
+            it.findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+        }
     }
 
 
@@ -125,5 +130,9 @@ class HomeFragment : Fragment() {
             }
             selectedItemId = R.id.fragment_home
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

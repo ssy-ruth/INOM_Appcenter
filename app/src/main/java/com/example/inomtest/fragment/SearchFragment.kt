@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
+//@SuppressLint("StaticFieldLeak") : asyncktask 때문에 써놨는데 코루틴으로 해결해서 지워도 될 것 같음
 class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDeleteListener {
     private lateinit var binding: FragmentSearchBinding
     lateinit var navController: NavController
