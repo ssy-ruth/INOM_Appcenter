@@ -32,6 +32,7 @@
             android:text="카테고리" />
 
         <Button
+            android:id="@+id/search_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

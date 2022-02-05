@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-//@SuppressLint("StaticFieldLeak")
+//@SuppressLint("StaticFieldLeak") : asyncktask 때문에 써놨는데 코루틴으로 해결해서 지워도 될 것 같음
 class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDeleteListener {
     private lateinit var binding: FragmentSearchBinding
     lateinit var navController: NavController
@@ -42,9 +42,18 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
             .build()
         searchDAO = db.recentSearchDAO()
         // recentWordList.addAll(db.recentSearchDAO().getAll())//갱신
-        searchAdapter = RecentSearchAdapter(recentWordList)
+        searchAdapter = RecentSearchAdapter(this,recentWordList, this)
 
         refreshAdapter()
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        binding.searchView.apply {
+            this.queryHint="검색어를 입력해주세요."
+            this.setOnQueryTextListener(this@SearchFragment)
+            //searchViewEditText = this.findViewById(androidx.appcompat.R.id.search_src_text) //=>NPE, api31부터 막혔다고 함
+            //searchViewEditText.setText("")
+        }
+        //searchViewEditText.apply { }
 
         onQueryTextChange(newText = null)
         with(binding) {
@@ -52,7 +61,7 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
             RecentWordList.layoutManager = GridLayoutManager(this@SearchFragment, 2)
 
             searchBtn.setOnClickListener {
-                val content = searchViewEditText.text.toString()
+                val content = binding.testEdit.text.toString()
                 if (content.isNotEmpty()) {
                     val recentWord1 = RecentSearchEntity(null, content)
                     insertWord(recentWord1)
@@ -62,6 +71,7 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
 
 
     }
+    //room 데이터 수정사항 업데이트
     fun refreshAdapter(){
         CoroutineScope(Dispatchers.IO).launch {
             recentWordList.clear()
@@ -71,86 +81,36 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
             }
         }
     }
+    //room 데이터 추가
     fun insertWord(searchWord:RecentSearchEntity){
         CoroutineScope(Dispatchers.IO).launch {
             searchDAO.insert(searchWord)
             refreshAdapter()
         }
     }
-
-
-
-    /*
-        fun insertRecentWord(recentWord: RecentSearchEntity) {
-
-            val insertTask = object : AsyncTask<Unit, Unit, Unit>(){
-                override fun doInBackground(vararg params: Unit?) {
-                    db.recentSearchDAO().insert(recentWord)
-                }
-
-                override fun onPostExecute(result: Unit?) {
-                    super.onPostExecute(result)
-                    getAllRecentWord()
-                }
-            }
-
-        }*/
-    /*
-    fun getAllRecentWord(){
-
-        val getTask = object : AsyncTask<Unit,Unit,Unit>(){
-            override fun doInBackground(vararg params: Unit?) {
-                recentWordList = db.recentSearchDAO().getAll()
-            }
-
-            override fun onPostExecute(result: Unit?) {
-                super.onPostExecute(result)
-                setRecyclerviewRecent(recentWordList)
-            }
+    //리사이클러뷰 삭제 _ 어댑터 파일과 연결
+    override fun onDeleteListener(recentWord: RecentSearchEntity) {
+        CoroutineScope(Dispatchers.IO).launch {
+            searchDAO.delete(recentWord)
+            refreshAdapter()
         }
-        getTask.execute()
-    }*/
-    /*
-    fun deleteRecentWord(recentWord: RecentSearchEntity){
-        val deleteTask = object : AsyncTask<Unit,Unit,Unit,>(){
-            override fun doInBackground(vararg params: Unit?) {
-                db.recentSearchDAO().delete(recentWord)
-            }
-
-            override fun onPostExecute(result: Unit?) {
-                super.onPostExecute(result)
-                getAllRecentWord()
-            }
-        }
-        deleteTask.execute()
-
-    }*/
-    fun setRecyclerviewRecent(recentWordList: List<RecentSearchEntity>){
-
-        binding.RecentWordList.adapter = RecentSearchAdapter(recentWordList)
     }
 
+//    fun setRecyclerviewRecent(recentWordList: List<RecentSearchEntity>){
+//        binding.RecentWordList.adapter = RecentSearchAdapter(this,recentWordList,this)
+//    }
+
+    //서치뷰 검색어 입력 이벤트
     override fun onQueryTextSubmit(query: String?): Boolean {
-        Log.d(TAG, "PhotoCollectionActivity - onQueryTextSubmit() called / query: $query")
+        Log.d(TAG, "SearchActivity - onQueryTextSubmit() called / query: $query")
 
         return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        Log.d(TAG, "PhotoCollectionActivity - onQueryTextChange() called / newText: $newText")
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        binding.searchView.apply {
-            this.queryHint="검색어를 입력해주세요."
-            this.setOnQueryTextListener(this@SearchFragment)
-            //searchViewEditText = this.findViewById(androidx.appcompat.R.id.search_src_text) //=>NPE, api31부터 막혔다고 함
-            //searchViewEditText.setText("")
-        }
-        searchViewEditText.apply {
-        }
+        Log.d(TAG, "SearchActivity - onQueryTextChange() called / newText: $newText")
+
         return true
     }
 
-    override fun onDeleteListener(recentWord: RecentSearchEntity) {
-        //deleteRecentWord(recentWord)
-    }
 }
