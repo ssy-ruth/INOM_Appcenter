@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inomtest.databinding.ItemSearchRecentBinding
 
-class RecentSearchAdapter(//val context: Context,
+class RecentSearchAdapter(val context: Context,
                           var list: List<RecentSearchEntity>
-                        //,var onDeleteListener: OnDeleteListener
+                        ,var onDeleteListener: OnDeleteListener
                           ):
     RecyclerView.Adapter<RecentSearchAdapter.RecentSearchViewHolder>() {
     private var _binding: ItemSearchRecentBinding? = null
