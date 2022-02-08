@@ -8,11 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.example.inomtest.BuildConfig
 import com.example.inomtest.R
 import com.example.inomtest.dataClass.LoginData
 import com.example.inomtest.databinding.FragmentLoginBinding
 import com.example.inomtest.databinding.FragmentSignupFinishBinding
 import com.example.inomtest.network.InomApi
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,8 +27,8 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var navController: NavController
 
-    var inuID : String = ""
-    var password : String = ""
+    lateinit var inuID : String
+    lateinit var password : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +47,11 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        inuID = binding.loginIDEdit.text.toString()
-        password = binding.loginIDEdit.text.toString()
+
 
         binding.loginBtn.setOnClickListener{
+            inuID = binding.loginIDEdit.text.toString()
+            password = binding.loginPWEdit.text.toString()
             login(inuID, password)
 
             it.findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
@@ -74,11 +78,11 @@ class LoginFragment : Fragment() {
 
     fun login(inuID: String, password: String) {
         var LoginData = LoginData()
-        LoginData.inuID = inuID
+        LoginData.inuId = inuID
         LoginData.password = password
         LoginData.pushToken = "pushToken"
 
-        val call = InomApi.createApi().login("Bearer **", LoginData())
+        val call = InomApi.createApi().login(LoginData())
 
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {

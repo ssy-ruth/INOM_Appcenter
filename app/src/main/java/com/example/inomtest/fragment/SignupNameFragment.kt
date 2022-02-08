@@ -22,17 +22,17 @@ class SignupNameFragment : Fragment() {
     lateinit var navController: NavController
 
     val bundle = Bundle()
-    var inuID : String = ""
+    var inuId : String = ""
     var password : String = ""
     var nickname : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        inuID = arguments?.getString("inuID").toString()
+        inuId = arguments?.getString("inuID").toString()
         password = arguments?.getString("password").toString()
 
-        Log.d("아이디", "$inuID")
+        Log.d("아이디", "$inuId")
         Log.d("비밀번호", "$password")
     }
 
@@ -71,11 +71,11 @@ class SignupNameFragment : Fragment() {
 
     fun login() {
         var LoginData = LoginData()
-        LoginData.inuID = inuID
+        LoginData.inuId = inuId
         LoginData.password = password
         LoginData.pushToken = "pushToken"
 
-        val call = InomApi.createApi().login("Bearer **", LoginData())
+        val call = InomApi.createApi().login(LoginData())
 
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
