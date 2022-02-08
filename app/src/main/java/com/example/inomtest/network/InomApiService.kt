@@ -34,7 +34,7 @@ object InomApi {
         .build()
 
     // 레트로핏 클라이언트 가져오기
-    fun getClient(baseUrl: String): Retrofit? {
+    fun getClient(baseUrl: String) {
         Log.d(TAG, "RetrofitClient - getClient() called")
 
         // okhttp 인스턴스 생성
@@ -81,7 +81,7 @@ object InomApi {
                 // ?client_id=asdfadsf
                 // 쿼리 파라미터 추가하기
                 val addedUrl =
-                    originalRequest.url.newBuilder().addQueryParameter("client_id", API.CLIENT_ID)
+                    originalRequest.url.newBuilder().addQueryParameter("client_id","YS7sdqX2kuYBOifsupK1A-J2S4tkMveczqAQVOEBJMs")
                         .build()
 
                 val finalRequest = originalRequest.newBuilder()
@@ -109,25 +109,25 @@ object InomApi {
                 InomApiService::class.java
             )
         }
-
-        // 문자열이 제이슨 형태인지
-        fun String?.isJsonObject(): Boolean {
-            if (this?.startsWith("{") == true && this.endsWith("}")) {
-                return true
-            } else {
-                return false
-            }
-//    return this?.startsWith("{") == true && this.endsWith("}")
-        }
-//fun String?.isJsonObject():Boolean = this?.startsWith("{") == true && this.endsWith("}")
-
-        // 문자열이 제이슨 배열인지
-        fun String?.isJsonArray(): Boolean {
-            if (this?.startsWith("[") == true && this.endsWith("]")) {
-                return true
-            } else {
-                return false
-            }
-        }
     }
+}
+private fun String.isJsonObject(): Boolean {
+    if (this?.startsWith("{") == true && this.endsWith("}")) {
+        return true
+    } else {
+        return false
+    }
+
+}
+
+
+
+private fun String.isJsonArray(): Boolean {
+
+    if (this?.startsWith("[") == true && this.endsWith("]")) {
+        return true
+    } else {
+        return false
+    }
+}
 
