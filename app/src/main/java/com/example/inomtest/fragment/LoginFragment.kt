@@ -14,8 +14,12 @@ import com.example.inomtest.dataClass.LoginData
 import com.example.inomtest.databinding.FragmentLoginBinding
 import com.example.inomtest.databinding.FragmentSignupFinishBinding
 import com.example.inomtest.network.InomApi
+import okhttp3.MediaType
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +33,8 @@ class LoginFragment : Fragment() {
 
     lateinit var inuID : String
     lateinit var password : String
+
+    val bundle = Bundle()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,12 +88,21 @@ class LoginFragment : Fragment() {
         LoginData.password = password
         LoginData.pushToken = "pushToken"
 
-        val call = InomApi.createApi().login(LoginData())
+
+        val paramObject = JSONObject()
+        paramObject.put("inuId", inuID)
+        paramObject.put("password", password)
+        paramObject.put("pushToken", "pushToken")
+        val request = RequestBody.create(MediaType.parse("application/json"),paramObject.toString())
+
+        val call = InomApi.createApi().login(request)
 
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
+
                     Log.d("로그인결과1", "통신결과"+response.code().toString())
+                    Log.d("액세스토큰", "통신결과"+response.headers().get("Authorization"))
                 }
 
                 else {

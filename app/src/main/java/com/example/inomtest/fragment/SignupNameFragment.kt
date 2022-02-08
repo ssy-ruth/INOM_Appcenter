@@ -12,6 +12,9 @@ import com.example.inomtest.R
 import com.example.inomtest.dataClass.LoginData
 import com.example.inomtest.databinding.FragmentSignupNameBinding
 import com.example.inomtest.network.InomApi
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -75,7 +78,14 @@ class SignupNameFragment : Fragment() {
         LoginData.password = password
         LoginData.pushToken = "pushToken"
 
-        val call = InomApi.createApi().login(LoginData())
+
+        val paramObject = JSONObject()
+        paramObject.put("inuId", inuId)
+        paramObject.put("password", password)
+        paramObject.put("pushToken", "pushToken")
+        val request = RequestBody.create(MediaType.parse("application/json"),paramObject.toString())
+
+        val call = InomApi.createApi().signUp(request)
 
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {

@@ -4,6 +4,7 @@ import com.example.inomtest.BuildConfig
 import com.example.inomtest.dataClass.ProductItem
 import com.example.inomtest.dataClass.LoginData
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -20,7 +21,12 @@ interface InomApiService {
 
     @POST("/api/users/login")
     fun login(
-        @Body jsonparams: LoginData
+        @Body jsonparams: RequestBody
+    ): Call<Void>
+
+    @POST("/api/users")
+    fun signUp(
+        @Body jsonparams: RequestBody
     ): Call<Void>
 }
 
