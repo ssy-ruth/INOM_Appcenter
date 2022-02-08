@@ -9,8 +9,8 @@ class MainViewModel : ViewModel() {
     private val items: LiveData<Data>
         get() = productRepository._products
 
-    fun loadProductItems(page: Int) {
-        productRepository.loadProductItems(page)
+    fun loadProductItems(accessToken: String, page: Int) {
+        productRepository.loadProductItems(accessToken, page)
     }
 
     fun getAll(): LiveData<Data> {

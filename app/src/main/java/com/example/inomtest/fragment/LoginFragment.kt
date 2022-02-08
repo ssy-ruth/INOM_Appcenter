@@ -103,6 +103,7 @@ class LoginFragment : Fragment() {
 
                     Log.d("로그인결과1", "통신결과"+response.code().toString())
                     Log.d("액세스토큰", "통신결과"+response.headers().get("Authorization"))
+                    bundle.putString("accessToken", response.headers().get("Authorization"))
                 }
 
                 else {

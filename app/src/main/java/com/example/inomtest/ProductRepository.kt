@@ -14,9 +14,9 @@ class ProductRepository {
     // private val parameter: MutableMap<String, String> = HashMap()
     var _products = MutableLiveData<Data>()
 
-    fun loadProductItems(page: Int) {
+    fun loadProductItems(accessToken: String, page: Int) {
         // parameter["page"] = page.toString()
-        val call = InomApi.createApi().loadProducts("Bearer **", page.toString())
+        val call = InomApi.createApi().loadProducts(accessToken, page.toString())
 
         call.enqueue(object : Callback<ProductItem> {
             override fun onResponse(
