@@ -13,21 +13,21 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.Room
 import com.example.inomtest.*
 import com.example.inomtest.databinding.FragmentSearchBinding
+import com.example.inomtest.network.RetrofitManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-//@SuppressLint("StaticFieldLeak") : asyncktask 때문에 써놨는데 코루틴으로 해결해서 지워도 될 것 같음
+
 class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDeleteListener {
     private lateinit var binding: FragmentSearchBinding
     lateinit var navController: NavController
     private lateinit var searchAdapter: RecentSearchAdapter
     private lateinit var db : RecentSearchDatabase
     private lateinit var searchDAO: RecentSearchDAO
-    val recentWordList = mutableListOf<RecentSearchEntity>()
-    //val recentWordList:List<RecentSearchEntity> = listOf<RecentSearchEntity>()
+    private val recentWordList = mutableListOf<RecentSearchEntity>()
     private lateinit var searchViewEditText: EditText
 
 
@@ -36,12 +36,9 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
         binding = FragmentSearchBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-        //binding.RecentWordList.layoutManager = GridLayoutManager(this,2)
-        //db= RecentSearchDatabase.getInstance(this)!!
         db = Room.databaseBuilder(this,RecentSearchDatabase::class.java,"room_db")
             .build()
         searchDAO = db.recentSearchDAO()
-        // recentWordList.addAll(db.recentSearchDAO().getAll())//갱신
         searchAdapter = RecentSearchAdapter(this,recentWordList, this)
 
         refreshAdapter()
@@ -50,10 +47,7 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
         binding.searchView.apply {
             this.queryHint="검색어를 입력해주세요."
             this.setOnQueryTextListener(this@SearchFragment)
-            //searchViewEditText = this.findViewById(androidx.appcompat.R.id.search_src_text) //=>NPE, api31부터 막혔다고 함
-            //searchViewEditText.setText("")
         }
-        //searchViewEditText.apply { }
 
         onQueryTextChange(newText = null)
         with(binding) {
@@ -96,13 +90,14 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
         }
     }
 
-//    fun setRecyclerviewRecent(recentWordList: List<RecentSearchEntity>){
-//        binding.RecentWordList.adapter = RecentSearchAdapter(this,recentWordList,this)
-//    }
-
     //서치뷰 검색어 입력 이벤트
+    //키보드의 검색버튼 클릭 되었을때
     override fun onQueryTextSubmit(query: String?): Boolean {
         Log.d(TAG, "SearchActivity - onQueryTextSubmit() called / query: $query")
+
+        this.binding.searchView.setQuery("", false)//서치뷰에 빈 값 넣고 검색은 안함
+        this.binding.searchView.clearFocus()//키보드가 내려감
+        //RetrofitManager.instance.searchWord(searchTerm)
 
         return true
     }
@@ -110,6 +105,7 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
     override fun onQueryTextChange(newText: String?): Boolean {
         Log.d(TAG, "SearchActivity - onQueryTextChange() called / newText: $newText")
 
+        val userInputText = newText ?: ""//검색창에 무언가 있으면 그대로 넣고 없으면 ""을 넣음
         return true
     }
 

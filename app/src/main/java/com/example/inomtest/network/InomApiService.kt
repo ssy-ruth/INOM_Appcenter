@@ -11,6 +11,9 @@ import retrofit2.http.Query
 interface InomApiService {
     @GET("/api/items?size=10&itemId=1000&categoryId=10&majorId=10&searchWord=10")
     fun loadProducts(@Query("page") page: String): Call<ProductItem>
+
+    @GET("/api/items?size=10&itemId=1000&categoryId=10&majorId=10&searchWord=10")
+    fun search(@Query("searchWord") searchTerm: String): Call<ProductItem>
 }
 
 object InomApi {
