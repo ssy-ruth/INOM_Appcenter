@@ -1,6 +1,7 @@
 package com.example.inomtest.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,10 +20,15 @@ class SignupPWFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var navController: NavController
 
+    val bundle = Bundle()
+    var inuID : String = ""
+    var password : String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
+
+        inuID = arguments?.getString("inuID").toString()
+        Log.d("아이디", inuID)
     }
 
     override fun onCreateView(
@@ -35,7 +41,11 @@ class SignupPWFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.signupPWBtn.setOnClickListener{
-            it.findNavController().navigate(R.id.action_signupPWFragment_to_signupNameFragment)
+            password = binding.signupPWEdit.text.toString()
+            bundle.putString("inuID", inuID)
+            bundle.putString("password", password)
+
+            it.findNavController().navigate(R.id.action_signupPWFragment_to_signupNameFragment, bundle)
         }
     }
     override fun onDestroyView() {
@@ -49,6 +59,7 @@ class SignupPWFragment : Fragment() {
         fun newInstance() =
             SignupPWFragment().apply {
                 arguments = Bundle().apply {
+
                 }
             }
     }
