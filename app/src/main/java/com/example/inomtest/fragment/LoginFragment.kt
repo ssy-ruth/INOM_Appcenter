@@ -1,5 +1,6 @@
 package com.example.inomtest.fragment
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,13 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.example.inomtest.BuildConfig
-import com.example.inomtest.R
+import com.example.inomtest.*
 import com.example.inomtest.dataClass.LoginData
 import com.example.inomtest.databinding.FragmentLoginBinding
-import com.example.inomtest.databinding.FragmentSignupFinishBinding
 import com.example.inomtest.network.InomApi
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -35,6 +35,8 @@ class LoginFragment : Fragment() {
     lateinit var password : String
 
     val bundle = Bundle()
+    val SharedPreferences = activity?.getSharedPreferences("access", 0)
+    var prefEdit = SharedPreferences?.edit()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +95,8 @@ class LoginFragment : Fragment() {
         paramObject.put("inuId", inuID)
         paramObject.put("password", password)
         paramObject.put("pushToken", "pushToken")
-        val request = RequestBody.create(MediaType.parse("application/json"),paramObject.toString())
+        //val request = RequestBody.create(MediaType.parse("application/json"),paramObject.toString())
+        val request = RequestBody.create("application/json"?.toMediaTypeOrNull(),paramObject.toString())
 
         val call = InomApi.createApi().login(request)
 
@@ -104,6 +107,8 @@ class LoginFragment : Fragment() {
                     Log.d("로그인결과1", "통신결과"+response.code().toString())
                     Log.d("액세스토큰", "통신결과"+response.headers().get("Authorization"))
                     bundle.putString("accessToken", response.headers().get("Authorization"))
+                    prefEdit?.putString("accessToken",response.headers().get("Authorization").toString())
+                    prefEdit?.apply()
                 }
 
                 else {
@@ -117,3 +122,4 @@ class LoginFragment : Fragment() {
         })
     }
 }
+

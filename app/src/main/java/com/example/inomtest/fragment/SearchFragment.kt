@@ -7,18 +7,22 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.Room
 import com.example.inomtest.*
 import com.example.inomtest.databinding.FragmentSearchBinding
+import com.example.inomtest.network.InomApi
+import com.example.inomtest.network.InomApiService
 import com.example.inomtest.network.RetrofitManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
+import okhttp3.Interceptor
+import okhttp3.Response
 
 
 class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDeleteListener {
@@ -59,6 +63,20 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
                 if (content.isNotEmpty()) {
                     val recentWord1 = RecentSearchEntity(null, content)
                     insertWord(recentWord1)
+                    //검색 api호출
+                    RetrofitManager.instance.searchWord(searchTerm = binding.testEdit.toString(), completion = {
+                        responseState, responseBody ->
+
+                        when(responseState){
+                            RetrofitManager.RESPONSE_STATE.OKAY->{
+                                Log.d(TAG,"api 호출 성공 : $responseBody")
+                            }
+                            RetrofitManager.RESPONSE_STATE.FAIL->{
+                                Toast.makeText(this@SearchFragment, "api 호출 에러입니다.",Toast.LENGTH_SHORT).show()
+                                Log.d(TAG,"api 호출 실패 : $responseBody")
+                            }
+                        }
+                    })
                 }
             }
         }
@@ -97,7 +115,8 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
 
         this.binding.searchView.setQuery("", false)//서치뷰에 빈 값 넣고 검색은 안함
         this.binding.searchView.clearFocus()//키보드가 내려감
-        //RetrofitManager.instance.searchWord(searchTerm)
+        //검색 api호출
+        //RetrofitManager.instance.searchWord(searchTerm = term)
 
         return true
     }
