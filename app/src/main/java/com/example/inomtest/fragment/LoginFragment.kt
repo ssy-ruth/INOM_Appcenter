@@ -1,15 +1,28 @@
 package com.example.inomtest.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.example.inomtest.BuildConfig
 import com.example.inomtest.R
+import com.example.inomtest.dataClass.LoginData
 import com.example.inomtest.databinding.FragmentLoginBinding
 import com.example.inomtest.databinding.FragmentSignupFinishBinding
+import com.example.inomtest.network.InomApi
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.RequestBody
+import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONArray
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginFragment : Fragment() {
@@ -17,6 +30,11 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     lateinit var navController: NavController
+
+    lateinit var inuID : String
+    lateinit var password : String
+
+    val bundle = Bundle()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +53,13 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         binding.loginBtn.setOnClickListener{
+            inuID = binding.loginIDEdit.text.toString()
+            password = binding.loginPWEdit.text.toString()
+            login(inuID, password)
+
             it.findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
         }
         binding.loginToSignup.setOnClickListener{
@@ -56,5 +80,40 @@ class LoginFragment : Fragment() {
                 arguments = Bundle().apply {
                 }
             }
+    }
+
+    fun login(inuID: String, password: String) {
+        var LoginData = LoginData()
+        LoginData.inuId = inuID
+        LoginData.password = password
+        LoginData.pushToken = "pushToken"
+
+
+        val paramObject = JSONObject()
+        paramObject.put("inuId", inuID)
+        paramObject.put("password", password)
+        paramObject.put("pushToken", "pushToken")
+        val request = RequestBody.create(MediaType.parse("application/json"),paramObject.toString())
+
+        val call = InomApi.createApi().login(request)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+
+                    Log.d("로그인결과1", "통신결과"+response.code().toString())
+                    Log.d("액세스토큰", "통신결과"+response.headers().get("Authorization"))
+                    bundle.putString("accessToken", response.headers().get("Authorization"))
+                }
+
+                else {
+                    Log.d("로그인결과2", "통신결과"+response.code().toString())
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.d("로그인결과3", "통신결과: $t")
+            }
+        })
     }
 }

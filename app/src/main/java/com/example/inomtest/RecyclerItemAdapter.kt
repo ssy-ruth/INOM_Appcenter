@@ -19,8 +19,8 @@ class RecyclerItemAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     inner class ItemsViewHolder(private val binding: ItemViewBinding)
         :RecyclerView.ViewHolder(binding.root) {
             fun bind(item: ItemData) {
-                binding.itemTextViewTitle.text = item.item_title
-                binding.itemTextViewPrice.text = item.item_price
+                binding.itemTextViewTitle.text = item.title
+                binding.itemTextViewPrice.text = item.price.toString()
             }
         }
 
@@ -32,7 +32,7 @@ class RecyclerItemAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     override fun getItemViewType(position: Int): Int {
         // 게시물과 프로그레스바 아이템뷰를 구분할 기준이 필요함.
-        return when (items[position].item_title) {
+        return when (items[position].title) {
             " " -> VIEW_TYPE_LOADING
             else -> VIEW_TYPE_ITEM
         }
@@ -68,7 +68,9 @@ class RecyclerItemAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     fun setList(items: MutableList<ItemData>) {
         items.addAll(items)
-        items.add(ItemData(null, " ", "")) // 프로그레스바 넣을 자리
+        items.add(ItemData(0, "제목 초기화", "내용 초기화", 0,
+            0, "상태 초기화", false, null, null,
+            null, null, null, " ")) // 프로그레스바 넣을 자리
     }
     
     fun deleteLoading() {

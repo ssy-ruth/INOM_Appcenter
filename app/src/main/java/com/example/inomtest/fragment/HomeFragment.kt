@@ -30,8 +30,11 @@ class HomeFragment : Fragment() {
 
     private var page = 1
 
+    private lateinit var accessToken: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        accessToken = arguments?.getString("accessToken").toString()
 
     }
 
@@ -49,7 +52,7 @@ class HomeFragment : Fragment() {
 
         model = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        model.loadProductItems(page)
+        model.loadProductItems(accessToken, page)
 
         binding.rvItemList.apply {
             binding.rvItemList.layoutManager = LinearLayoutManager(context)

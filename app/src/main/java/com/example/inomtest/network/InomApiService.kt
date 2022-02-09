@@ -2,7 +2,7 @@ package com.example.inomtest.network
 
 import com.example.inomtest.BuildConfig
 import com.example.inomtest.dataClass.ProductItem
-//import com.example.inomtest.dataClass.LoginData
+import com.example.inomtest.dataClass.LoginData
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -32,7 +32,6 @@ interface InomApiService {
     @GET("/api/items?size=10&itemId=1000&categoryId=10&majorId=10&searchWord=10")
     fun search(@Query("searchWord") searchTerm: String): Call<ProductItem>
 }
-
 
 object InomApi {
     // private const val baseUrl = "https://inu-market.cf/"  // 베이스 URL
@@ -67,14 +66,9 @@ object InomApi {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-
     fun createApi(): InomApiService {
         return retrofit.create(
             InomApiService::class.java
         )
-
-
     }
-
-
 }

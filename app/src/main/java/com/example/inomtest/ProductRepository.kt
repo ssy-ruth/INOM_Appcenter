@@ -1,5 +1,6 @@
 package com.example.inomtest
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.inomtest.dataClass.Data
 import com.example.inomtest.dataClass.ProductItem
@@ -13,9 +14,9 @@ class ProductRepository {
     // private val parameter: MutableMap<String, String> = HashMap()
     var _products = MutableLiveData<Data>()
 
-    fun loadProductItems(page: Int) {
+    fun loadProductItems(accessToken: String, page: Int) {
         // parameter["page"] = page.toString()
-        val call = InomApi.createApi().loadProducts(page.toString())
+        val call = InomApi.createApi().loadProducts(accessToken, page.toString())
 
         call.enqueue(object : Callback<ProductItem> {
             override fun onResponse(
@@ -23,12 +24,17 @@ class ProductRepository {
                 response: Response<ProductItem>
             ) {
                 if (response.isSuccessful) {
+                    Log.d("결과1", "통신결과"+response.code().toString())
                     _products.value = response.body()!!.data
+                }
+
+                else {
+                    Log.d("결과2", "통신결과"+response.code().toString())
                 }
             }
 
             override fun onFailure(call: Call<ProductItem>, t: Throwable) {
-
+                Log.d("결과3", "통신결과: $t")
             }
         })
     }
