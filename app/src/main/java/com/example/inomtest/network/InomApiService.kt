@@ -1,31 +1,65 @@
 package com.example.inomtest.network
 
-import android.content.ContentValues.TAG
-import android.util.Log
+import com.example.inomtest.BuildConfig
 import com.example.inomtest.dataClass.ProductItem
-import okhttp3.Interceptor
+//import com.example.inomtest.dataClass.LoginData
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 import java.util.concurrent.TimeUnit
 
 interface InomApiService {
     @GET("/api/items?size=10&itemId=1000&categoryId=10&majorId=10&searchWord=10")
-    fun loadProducts(@Query("page") page: String): Call<ProductItem>
+    fun loadProducts(
+        @Header("Authorization") accessToken: String,
+        @Query("page") page: String): Call<ProductItem>
+
+    @POST("/api/users/login")
+    fun login(
+        @Body jsonparams: RequestBody
+    ): Call<Void>
+
+    @POST("/api/users")
+    fun signUp(
+        @Body jsonparams: RequestBody
+    ): Call<Void>
 
     @GET("/api/items?size=10&itemId=1000&categoryId=10&majorId=10&searchWord=10")
     fun search(@Query("searchWord") searchTerm: String): Call<ProductItem>
 }
 
+
 object InomApi {
-    private const val baseUrl = "https://inu-market.cf/"  // 베이스 URL
+    // private const val baseUrl = "https://inu-market.cf/"  // 베이스 URL
+    private const val baseUrl = "http://13.209.183.154:8080"
+
+    init {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        val builder = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .connectTimeout(180, TimeUnit.SECONDS)
+            .readTimeout(180, TimeUnit.SECONDS)
+            .writeTimeout(180, TimeUnit.SECONDS)
+            .build()
+
+        //Retrofit : type-safe한 HTTP 클라이언트 라이브러리
+        //retrofit은 Okhttp 클라이언트를 디폴트로 선언
+        //다른 HTTP 모듈보다 빠름
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(builder)
+            .build()
+    }
+
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
@@ -33,101 +67,14 @@ object InomApi {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    // 레트로핏 클라이언트 가져오기
-    fun getClient(baseUrl: String) {
-        Log.d(TAG, "RetrofitClient - getClient() called")
 
-        // okhttp 인스턴스 생성
-        val client = OkHttpClient.Builder()
-
-        // 로그를 찍기 위해 로깅 인터셉터 설정
-        val loggingInterceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
-
-            override fun log(message: String) {
-//                Log.d(TAG, "RetrofitClient - log() called / message: $message")
-
-                when {
-                    message.isJsonObject() ->
-                        Log.d(TAG, JSONObject(message).toString(4))
-                    message.isJsonArray() ->
-                        Log.d(TAG, JSONObject(message).toString(4))
-                    else -> {
-                        try {
-                            Log.d(TAG, JSONObject(message).toString(4))
-                        } catch (e: Exception) {
-                            Log.d(TAG, message)
-                        }
-                    }
-                }
-
-            }
-
-        })
-
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-        // 위에서 설정한 로깅 인터셉터를 okhttp 클라이언트에 추가한다.
-        client.addInterceptor(loggingInterceptor)
+    fun createApi(): InomApiService {
+        return retrofit.create(
+            InomApiService::class.java
+        )
 
 
-        // 기본 파라미터 인터셉터 설정
-        val baseParameterInterceptor: Interceptor = (object : Interceptor {
-
-            override fun intercept(chain: Interceptor.Chain): Response {
-                Log.d(TAG, "RetrofitClient - intercept() called")
-                // 오리지날 리퀘스트
-                val originalRequest = chain.request()
-
-                // ?client_id=asdfadsf
-                // 쿼리 파라미터 추가하기
-                val addedUrl =
-                    originalRequest.url.newBuilder().addQueryParameter("client_id","YS7sdqX2kuYBOifsupK1A-J2S4tkMveczqAQVOEBJMs")
-                        .build()
-
-                val finalRequest = originalRequest.newBuilder()
-                    .url(addedUrl)
-                    .method(originalRequest.method, originalRequest.body)
-                    .build()
-
-                return chain.proceed(finalRequest)
-            }
-
-        })
-
-
-        // 위에서 설정한 기본파라매터 인터셉터를 okhttp 클라이언트에 추가한다.
-        client.addInterceptor(baseParameterInterceptor)
-
-        // 커넥션 타임아웃
-        client.connectTimeout(10, TimeUnit.SECONDS)
-        client.readTimeout(10, TimeUnit.SECONDS)
-        client.writeTimeout(10, TimeUnit.SECONDS)
-        client.retryOnConnectionFailure(true)
-
-        fun createApi(): InomApiService {
-            return retrofit.create(
-                InomApiService::class.java
-            )
-        }
-    }
-}
-private fun String.isJsonObject(): Boolean {
-    if (this?.startsWith("{") == true && this.endsWith("}")) {
-        return true
-    } else {
-        return false
     }
 
+
 }
-
-
-
-private fun String.isJsonArray(): Boolean {
-
-    if (this?.startsWith("[") == true && this.endsWith("]")) {
-        return true
-    } else {
-        return false
-    }
-}
-
