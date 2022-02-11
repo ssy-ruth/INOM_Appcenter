@@ -60,7 +60,6 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="room/recyclertest"
         app:layout_constraintBottom_toTopOf="@+id/RecentWordList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textRecentWord"

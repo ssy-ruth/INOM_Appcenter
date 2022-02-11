@@ -15,21 +15,23 @@ class RetrofitManager {
     companion object {
         val instance = RetrofitManager()
     }
-    //레트로핏 인터페이스 가져오기
-    private val iRetrofit :InomApiService = InomApi.createApi()
-    val SharedPreferences = App.instance.getSharedPreferences("access", Context.MODE_PRIVATE)
 
     //검색 api 호출
-    fun searchWord(searchTerm:String?, completion:(RESPONSE_STATE, String)->Unit){
+    fun searchWord(completion:(RESPONSE_STATE, String)->Unit){
+        //레트로핏 인터페이스 가져오기
+        val iRetrofit :InomApiService = InomApi.createApi()
 
-        val term = searchTerm.let {
-            it
-        }?:""
 
+        val SharedPreferences = App.instance.getSharedPreferences("access", Context.MODE_PRIVATE)
         var access = SharedPreferences.getString("accessToken", "")
         val gson = Gson()
         var access1 = gson.toJson(access)
-        val callSearch = iRetrofit.search(accessToken = access1,searchTerm = term).let{
+        var searchTerm = SharedPreferences.getString("searchWord","")
+        var term = searchTerm.let {
+            it
+        }?:""
+        var term1 = gson.toJson(term)
+        val callSearch = iRetrofit.search(accessToken = access1, searchTerm = term).let{
             it
         }?: return
 
@@ -37,6 +39,7 @@ class RetrofitManager {
             //응답성공시
             override fun onResponse(call: Call<ProductItem>, response: Response<ProductItem>) {
                 Log.d(TAG, "RetrofitMasager - onResponce() called / t ${response.raw()}")
+                Log.d(TAG, "검색어 : $term, 토큰 : $access1")
                 completion(RESPONSE_STATE.OKAY, response.raw().toString())
             }
 

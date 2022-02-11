@@ -1,9 +1,11 @@
 package com.example.inomtest.network
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.util.Log
 import com.example.inomtest.dataClass.ProductItem
 import com.example.inomtest.network.InomApi.baseUrl
+import com.google.gson.Gson
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -42,7 +44,6 @@ interface InomApiService {
         @Query("searchWord") searchTerm: String): Call<ProductItem>
 }
 object InomApi {
-    val SharedPreferences = App.instance.getSharedPreferences("access", 0)
 
     // private const val baseUrl = "https://inu-market.cf/"  // 베이스 URL
     private const val baseUrl = "http://117.16.191.59:8080"
@@ -85,20 +86,29 @@ object InomApi {
 //            override fun intercept(chain: Interceptor.Chain): Response {
 //
 //                Log.d(TAG, "RetrofitClient - intercept() called")
+//                val SharedPreferences = App.instance.getSharedPreferences("access", Context.MODE_PRIVATE)
+//                var access = SharedPreferences.getString("accessToken", "")
+//                val gson = Gson()
+//                var access1 = gson.toJson(access)
 //                // 오리지날 리퀘스트
-//                val originalRequest = chain.request()
+//                val originalRequest = chain.request().newBuilder()
 //
 //                // 액세스토큰 파라매터 추가하기
-//                val addedUrl = originalRequest.url.newBuilder()
-//                    .addQueryParameter("Authorization", SharedPreferences.getString("accessToken", ""))
-//                    .build()
+//                val newRequest = if (access!!.isNotEmpty()){
+//                    originalRequest.addHeader("Authorization",access1)
+//                }else{
+//                    originalRequest
+//                }.build()
+////                val addedUrl = originalRequest.url.newBuilder()
+////                    .addQueryParameter("Authorization", access1)
+////                    .build()
+////
+////                val finalRequest = originalRequest.newBuilder()
+////                    .url(addedUrl)
+////                    .method(originalRequest.method, originalRequest.body)
+////                    .build()
 //
-//                val finalRequest = originalRequest.newBuilder()
-//                    .url(addedUrl)
-//                    .method(originalRequest.method, originalRequest.body)
-//                    .build()
-//
-//                return chain.proceed(finalRequest)
+//                return chain.proceed(newRequest)
 //            }
 //        })
 

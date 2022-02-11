@@ -14,16 +14,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.Room
 import com.example.inomtest.*
 import com.example.inomtest.databinding.FragmentSearchBinding
-import com.example.inomtest.network.App
-import com.example.inomtest.network.InomApi
-import com.example.inomtest.network.InomApiService
 import com.example.inomtest.network.RetrofitManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Interceptor
-import okhttp3.Response
 
 
 class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDeleteListener {
@@ -33,7 +28,6 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
     private lateinit var db : RecentSearchDatabase
     private lateinit var searchDAO: RecentSearchDAO
     private val recentWordList = mutableListOf<RecentSearchEntity>()
-    var SharedPreferences = getSharedPreferences("access", MODE_PRIVATE)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,26 +55,30 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
 
             searchBtn.setOnClickListener {
                 val content = binding.testEdit.text.toString()
-                var access = SharedPreferences.getString("accessToken","못찾는데?")
-                binding.testEdit.setText(access)
-//                if (content.isNotEmpty()) {
-//                    val recentWord1 = RecentSearchEntity(null, content)
-//                    insertWord(recentWord1)
-//                    //검색 api호출
-//                    RetrofitManager.instance.searchWord(searchTerm = binding.testEdit.toString(), completion = {
-//                        responseState, responseBody ->
-//
-//                        when(responseState){
-//                            RetrofitManager.RESPONSE_STATE.OKAY->{
-//                                Log.d(TAG,"api 호출 성공 : $responseBody")
-//                            }
-//                            RetrofitManager.RESPONSE_STATE.FAIL->{
-//                                Toast.makeText(this@SearchFragment, "api 호출 에러입니다.",Toast.LENGTH_SHORT).show()
-//                                Log.d(TAG,"api 호출 실패 : $responseBody")
-//                            }
-//                        }
-//                    })
-//                }
+                val SharedPreferences = getSharedPreferences("access", MODE_PRIVATE)
+                val prefEdit = SharedPreferences.edit()
+                prefEdit?.putString("searchWord",content)
+                prefEdit?.apply()
+                //var access = SharedPreferences.getString("accessToken","못찾는데?")
+                //binding.testEdit.setText(access)
+                if (content.isNotEmpty()) {
+                    val recentWord1 = RecentSearchEntity(null, content)
+                    insertWord(recentWord1)
+                    //검색 api호출
+                    RetrofitManager.instance.searchWord(completion = {
+                        responseState, responseBody ->
+
+                        when(responseState){
+                            RetrofitManager.RESPONSE_STATE.OKAY->{
+                                Log.d(TAG,"api 호출 성공 : $responseBody")
+                            }
+                            RetrofitManager.RESPONSE_STATE.FAIL->{
+                                Toast.makeText(this@SearchFragment, "api 호출 에러입니다.",Toast.LENGTH_SHORT).show()
+                                Log.d(TAG,"api 호출 실패 : $responseBody")
+                            }
+                        }
+                    })
+                }
             }
         }
 

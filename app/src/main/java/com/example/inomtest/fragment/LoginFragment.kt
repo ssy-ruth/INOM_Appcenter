@@ -37,8 +37,6 @@ class LoginFragment : Fragment() {
     lateinit var password : String
 
     val bundle = Bundle()
-    val SharedPreferences = activity?.getSharedPreferences("access", MODE_PRIVATE)
-    val prefEdit = SharedPreferences?.edit()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +107,8 @@ class LoginFragment : Fragment() {
                     Log.d("액세스토큰", "통신결과"+response.headers().get("Authorization"))
                     bundle.putString("accessToken", response.headers().get("Authorization"))
                     //SharedPreference 추가하였습니다
+                    val SharedPreferences = activity?.getSharedPreferences("access", MODE_PRIVATE)
+                    val prefEdit = SharedPreferences?.edit()
                     var header = response.headers().get("Authorization").toString()
                     prefEdit?.putString("accessToken",header)
                     prefEdit?.apply()
