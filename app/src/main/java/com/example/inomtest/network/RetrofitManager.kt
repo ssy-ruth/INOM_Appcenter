@@ -1,11 +1,13 @@
 package com.example.inomtest.network
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.SharedPreferences
 import android.nfc.Tag
 import android.util.Log
 import com.example.inomtest.dataClass.ProductItem
 import com.example.inomtest.fragment.SearchFragment
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Response
 
@@ -15,6 +17,7 @@ class RetrofitManager {
     }
     //레트로핏 인터페이스 가져오기
     private val iRetrofit :InomApiService = InomApi.createApi()
+    val SharedPreferences = App.instance.getSharedPreferences("access", Context.MODE_PRIVATE)
 
     //검색 api 호출
     fun searchWord(searchTerm:String?, completion:(RESPONSE_STATE, String)->Unit){
@@ -23,7 +26,10 @@ class RetrofitManager {
             it
         }?:""
 
-        val callSearch = iRetrofit.search(searchTerm = term).let{
+        var access = SharedPreferences.getString("accessToken", "")
+        val gson = Gson()
+        var access1 = gson.toJson(access)
+        val callSearch = iRetrofit.search(accessToken = access1,searchTerm = term).let{
             it
         }?: return
 

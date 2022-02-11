@@ -1,5 +1,7 @@
 package com.example.inomtest.fragment
 
+import android.content.ContentValues.TAG
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -35,8 +37,8 @@ class LoginFragment : Fragment() {
     lateinit var password : String
 
     val bundle = Bundle()
-    val SharedPreferences = activity?.getSharedPreferences("access", 0)
-    var prefEdit = SharedPreferences?.edit()
+    val SharedPreferences = activity?.getSharedPreferences("access", MODE_PRIVATE)
+    val prefEdit = SharedPreferences?.edit()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,12 +105,18 @@ class LoginFragment : Fragment() {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-
                     Log.d("로그인결과1", "통신결과"+response.code().toString())
                     Log.d("액세스토큰", "통신결과"+response.headers().get("Authorization"))
                     bundle.putString("accessToken", response.headers().get("Authorization"))
-                    prefEdit?.putString("accessToken",response.headers().get("Authorization").toString())
+                    //SharedPreference 추가하였습니다
+                    var header = response.headers().get("Authorization").toString()
+                    prefEdit?.putString("accessToken",header)
                     prefEdit?.apply()
+                    if (SharedPreferences!!.contains("accessToken")){
+                        Log.d(TAG,"토큰 있습니다")
+                    }else{
+                        Log.d(TAG,"토큰이 왜 없을까요")
+                    }
                 }
 
                 else {
