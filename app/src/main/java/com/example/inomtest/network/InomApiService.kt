@@ -95,18 +95,15 @@ object InomApi {
 //
 //                // 액세스토큰 파라매터 추가하기
 //                val newRequest = if (access!!.isNotEmpty()){
-//                    originalRequest.addHeader("Authorization",access1)
+//                    originalRequest.addHeader("Authorization",access)
 //                }else{
 //                    originalRequest
 //                }.build()
-////                val addedUrl = originalRequest.url.newBuilder()
-////                    .addQueryParameter("Authorization", access1)
-////                    .build()
-////
-////                val finalRequest = originalRequest.newBuilder()
-////                    .url(addedUrl)
-////                    .method(originalRequest.method, originalRequest.body)
-////                    .build()
+//
+//                val finalRequest = originalRequest.newBuilder()
+//                    .url(addedUrl)
+//                    .method(originalRequest.method, originalRequest.body)
+//                    .build()
 //
 //                return chain.proceed(newRequest)
 //            }

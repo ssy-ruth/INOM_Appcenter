@@ -21,7 +21,7 @@ class RetrofitManager {
         //레트로핏 인터페이스 가져오기
         val iRetrofit :InomApiService = InomApi.createApi()
 
-
+        //검색어, 액세스 토큰 가져오기
         val SharedPreferences = App.instance.getSharedPreferences("access", Context.MODE_PRIVATE)
         var access = SharedPreferences.getString("accessToken", "")
         val gson = Gson()
