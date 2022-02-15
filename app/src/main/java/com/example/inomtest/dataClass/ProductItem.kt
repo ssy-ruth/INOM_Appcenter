@@ -21,7 +21,8 @@ data class ItemData(
     val major : Major?,
     val category : Category?,
     val seller : Seller?,
-    val imageUrls: String = " "
+    val imageUrls: String = " ",
+    val size:Int = 0
 )
 
 data class Major (

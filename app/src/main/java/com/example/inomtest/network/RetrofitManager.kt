@@ -25,13 +25,12 @@ class RetrofitManager {
         val SharedPreferences = App.instance.getSharedPreferences("access", Context.MODE_PRIVATE)
         var access = SharedPreferences.getString("accessToken", "")
         val gson = Gson()
-        var access1 = gson.toJson(access)
         var searchTerm = SharedPreferences.getString("searchWord","")
         var term = searchTerm.let {
             it
         }?:""
         var term1 = gson.toJson(term)
-        val callSearch = iRetrofit.search(accessToken = access1, searchTerm = term).let{
+        val callSearch = iRetrofit.search(Authorization = access.toString(), searchTerm = term, size = 10).let{
             it
         }?: return
 
@@ -39,7 +38,7 @@ class RetrofitManager {
             //응답성공시
             override fun onResponse(call: Call<ProductItem>, response: Response<ProductItem>) {
                 Log.d(TAG, "RetrofitMasager - onResponce() called / t ${response.raw()}")
-                Log.d(TAG, "검색어 : $term, 토큰 : $access1")
+                Log.d(TAG, "검색어 : $term, 토큰 : $access")
                 completion(RESPONSE_STATE.OKAY, response.raw().toString())
             }
 
@@ -57,7 +56,7 @@ class RetrofitManager {
     }
 }
 
-//익스텐션 함수 : 문자열이 json 형태나 배열인지 확인
+//익스텐션 함수 : 문자열이 json 형태나 배열인지 확인 _ InomApiService 헤더 자동으로 추가해주는 부분에서 사용
 fun String.isJsonObject(): Boolean {
     return this?.startsWith("{") && this.endsWith("}")
 

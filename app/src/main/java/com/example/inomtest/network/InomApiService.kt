@@ -38,10 +38,11 @@ interface InomApiService {
         @Body jsonparams: RequestBody
     ): Call<Void>
 
-    @GET("/api/items?size=10&itemId=1000&categoryId=10&majorId=10&searchWord=10")
+    @GET("/api/items")
     fun search(
-        @Header("Authorization") accessToken: String,
-        @Query("searchWord") searchTerm: String): Call<ProductItem>
+        @Header("Authorization") Authorization: String,
+        @Query("searchWord") searchTerm: String,
+        @Query("size") size:Int): Call<ProductItem>
 }
 object InomApi {
 
