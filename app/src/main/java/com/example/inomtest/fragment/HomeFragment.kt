@@ -1,6 +1,7 @@
 package com.example.inomtest.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,12 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.inomtest.MainViewModel
 import com.example.inomtest.R
 import com.example.inomtest.RecyclerItemAdapter
+import com.example.inomtest.dataClass.ItemData
 import com.example.inomtest.databinding.FragmentHomeBinding
 
 
 class HomeFragment : Fragment() {
     val productRegiFragment = ProductRegiFragment()
-
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -32,9 +33,18 @@ class HomeFragment : Fragment() {
 
     private lateinit var accessToken: String
 
+    private var size = 10
+    private var itemId: String? = null
+    private var categoryId: String? = null
+    private var majorId: String? = null
+    private var searchWord: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accessToken = arguments?.getString("accessToken").toString()
+        Log.d("홈프_액세스토큰", accessToken)
+
+
 
     }
 
@@ -50,9 +60,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         model = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        model.loadProductItems(accessToken, page)
+        model.loadProductItems(
+            accessToken,
+            size,
+            itemId,
+            categoryId,
+            majorId,
+            searchWord
+        )
 
         binding.rvItemList.apply {
             binding.rvItemList.layoutManager = LinearLayoutManager(context)
@@ -64,7 +82,7 @@ class HomeFragment : Fragment() {
 //        list.add(ItemData(ContextCompat.getDrawable(requireContext(), R.drawable.image_sample)!!, "제목3", "가격3"))
 
         model.getAll().observe(viewLifecycleOwner, Observer {
-            recyclerItemAdapter.setList(it.items)
+            recyclerItemAdapter.setList(it as MutableList<ItemData>)
             recyclerItemAdapter.notifyItemRangeChanged((page - 1) * 10, 10)
         })
 

@@ -3,7 +3,7 @@ package com.example.inomtest.network
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
-import com.example.inomtest.dataClass.ProductItem
+import com.example.inomtest.dataClass.ItemData
 import com.example.inomtest.network.InomApi.baseUrl
 import com.google.gson.Gson
 import okhttp3.Interceptor
@@ -23,10 +23,16 @@ import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 interface InomApiService {
-    @GET("/api/items?size=10&itemId=1000&categoryId=10&majorId=10&searchWord=10")
+    @GET("/api/items")
     fun loadProducts(
         @Header("Authorization") accessToken: String,
-        @Query("page") page: String): Call<ProductItem>
+        @Query ("size") size: Int,
+        @Query ("itemId") itemId: String?,
+        @Query ("categoryId") categoryId: String?,
+        @Query ("majorId") majorId: String?,
+        @Query ("searchWord") searchWord: String?,
+    )
+            : Call<List<ItemData>>
 
     @POST("/api/users/login")
     fun login(
@@ -40,9 +46,9 @@ interface InomApiService {
 
     @GET("/api/items")
     fun search(
-        @Header("Authorization") Authorization: String,
+        @Header("Authorization") accessToken: String,
         @Query("searchWord") searchTerm: String,
-        @Query("size") size:Int): Call<ProductItem>
+        @Query("size")size:Int): Call<List<ItemData>>
 }
 object InomApi {
 

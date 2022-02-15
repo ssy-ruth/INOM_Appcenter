@@ -59,8 +59,6 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
                 val prefEdit = SharedPreferences.edit()
                 prefEdit?.putString("searchWord",content)
                 prefEdit?.apply()
-                //var access = SharedPreferences.getString("accessToken","못찾는데?")
-                //binding.testEdit.setText(access)
                 if (content.isNotEmpty()) {
                     val recentWord1 = RecentSearchEntity(null, content)
                     insertWord(recentWord1)
