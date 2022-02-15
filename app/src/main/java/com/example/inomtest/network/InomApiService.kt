@@ -32,17 +32,20 @@ interface InomApiService {
         @Query ("majorId") majorId: String?,
         @Query ("searchWord") searchWord: String?,
     )
-            : Call<List<ItemData>>
+    : Call<List<ItemData>>
 
+    // 로그인
     @POST("/api/users/login")
     fun login(
         @Body jsonparams: RequestBody
     ): Call<Void>
 
+    // 회원가입
     @POST("/api/users")
     fun signUp(
         @Body jsonparams: RequestBody
     ): Call<Void>
+
 
     @GET("/api/items")
     fun search(
@@ -50,8 +53,8 @@ interface InomApiService {
         @Query("searchWord") searchTerm: String,
         @Query("size")size:Int): Call<List<ItemData>>
 }
-object InomApi {
 
+object InomApi {
     // private const val baseUrl = "https://inu-market.cf/"  // 베이스 URL
     private const val baseUrl = "http://117.16.191.59:8080"
 
@@ -87,38 +90,8 @@ object InomApi {
         })
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-
-        //액세스토큰을 기본적으로 넣어주는 인터셉터
-//        val baseParameterInterceptor: Interceptor = (object : Interceptor {
-//            override fun intercept(chain: Interceptor.Chain): Response {
-//
-//                Log.d(TAG, "RetrofitClient - intercept() called")
-//                val SharedPreferences = App.instance.getSharedPreferences("access", Context.MODE_PRIVATE)
-//                var access = SharedPreferences.getString("accessToken", "")
-//                val gson = Gson()
-//                var access1 = gson.toJson(access)
-//                // 오리지날 리퀘스트
-//                val originalRequest = chain.request().newBuilder()
-//
-//                // 액세스토큰 파라매터 추가하기
-//                val newRequest = if (access!!.isNotEmpty()){
-//                    originalRequest.addHeader("Authorization",access)
-//                }else{
-//                    originalRequest
-//                }.build()
-//
-//                val finalRequest = originalRequest.newBuilder()
-//                    .url(addedUrl)
-//                    .method(originalRequest.method, originalRequest.body)
-//                    .build()
-//
-//                return chain.proceed(newRequest)
-//            }
-//        })
-
         val builder = OkHttpClient.Builder()
             .addInterceptor(interceptor)
-            //.addInterceptor(baseParameterInterceptor)
             .connectTimeout(180, TimeUnit.SECONDS)
             .readTimeout(180, TimeUnit.SECONDS)
             .writeTimeout(180, TimeUnit.SECONDS)
@@ -141,4 +114,14 @@ object InomApi {
             InomApiService::class.java
         )
     }
+
+    fun String.isJsonObject(): Boolean {
+        return this?.startsWith("{") && this.endsWith("}")
+
+    }
+    fun String.isJsonArray(): Boolean {
+        return this?.startsWith("[") && this.endsWith("]")
+    }
+
+
 }

@@ -70,24 +70,41 @@ data class ItemDetail (
 
     @SerializedName("imageUrls")
     var imageUrls: List<String>
-)
+    )
 
 
 data class Major (
-    val majorID: String,
-    val name: String
+    @SerializedName("majorID")
+    var majorID: String,
+
+    @SerializedName("name")
+    var name: String
 )
 
 data class Category (
-    val categoryID: Int,
-    val name: String,
-    val iconUrl: String
+    @SerializedName("categoryID")
+    var categoryID: Int,
+
+    @SerializedName("name")
+    var name: String,
+
+    @SerializedName("iconUrl")
+    var iconUrl: String
 )
 
 data class Seller (
-    val userID: Int,
-    val nickName: String,
-    val imageUrl: String,
-    val score: Float,
-    val pushToken: String
+    @SerializedName("userID")
+    var userID: Int,
+
+    @SerializedName("nickName")
+    var nickName: String,
+
+    @SerializedName("imageUrl")
+    var imageUrl: String,
+
+    @SerializedName("score")
+    var score: Float,
+
+    @SerializedName("pushToken")
+    var pushToken: String
 )

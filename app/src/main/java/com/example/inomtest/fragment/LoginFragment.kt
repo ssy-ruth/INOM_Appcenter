@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import com.example.inomtest.*
 import com.example.inomtest.dataClass.LoginData
 import com.example.inomtest.databinding.FragmentLoginBinding
+import com.example.inomtest.databinding.FragmentSignupFinishBinding
 import com.example.inomtest.network.InomApi
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -35,6 +36,7 @@ class LoginFragment : Fragment() {
 
     lateinit var inuID : String
     lateinit var password : String
+    var accessToken: String = ""
 
     val bundle = Bundle()
 
@@ -60,9 +62,11 @@ class LoginFragment : Fragment() {
         binding.loginBtn.setOnClickListener{
             inuID = binding.loginIDEdit.text.toString()
             password = binding.loginPWEdit.text.toString()
-            login(inuID, password)
 
-            it.findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+            accessToken = login(inuID, password)
+            if (accessToken != "") {
+                it.findNavController().navigate(R.id.action_loginFragment_to_homeFragment, bundle)
+            }
         }
         binding.loginToSignup.setOnClickListener{
             it.findNavController().navigate(R.id.action_loginFragment_to_signupMainFragment)
@@ -84,12 +88,11 @@ class LoginFragment : Fragment() {
             }
     }
 
-    fun login(inuID: String, password: String) {
+    fun login(inuID: String, password: String) : String {
         var LoginData = LoginData()
         LoginData.inuId = inuID
         LoginData.password = password
         LoginData.pushToken = "pushToken"
-
 
         val paramObject = JSONObject()
         paramObject.put("inuId", inuID)
@@ -103,8 +106,11 @@ class LoginFragment : Fragment() {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
+
                     Log.d("로그인결과1", "통신결과"+response.code().toString())
                     Log.d("액세스토큰", "통신결과"+response.headers().get("Authorization"))
+                    accessToken = response.headers().get("Authorization").toString()
+                    bundle.putString("accessToken", accessToken)
                     bundle.putString("accessToken", response.headers().get("Authorization"))
                     //SharedPreference 추가하였습니다
                     val SharedPreferences = activity?.getSharedPreferences("access", MODE_PRIVATE)
@@ -112,11 +118,6 @@ class LoginFragment : Fragment() {
                     var header = response.headers().get("Authorization").toString()
                     prefEdit?.putString("accessToken",header)
                     prefEdit?.apply()
-                    if (SharedPreferences!!.contains("accessToken")){
-                        Log.d(TAG,"토큰 있습니다")
-                    }else{
-                        Log.d(TAG,"토큰이 왜 없을까요")
-                    }
                 }
 
                 else {
@@ -128,6 +129,7 @@ class LoginFragment : Fragment() {
                 Log.d("로그인결과3", "통신결과: $t")
             }
         })
+
+        return accessToken
     }
 }
-
