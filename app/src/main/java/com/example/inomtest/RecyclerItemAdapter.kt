@@ -69,8 +69,7 @@ class RecyclerItemAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     fun setList(items: MutableList<ItemData>) {
         items.addAll(items)
         items.add(ItemData(0, "제목 초기화", "내용 초기화", 0,
-            0, "상태 초기화", false, null, null,
-            null, null, null, " ")) // 프로그레스바 넣을 자리
+            0, "상태 초기화", "", "")) // 프로그레스바 넣을 자리
     }
     
     fun deleteLoading() {

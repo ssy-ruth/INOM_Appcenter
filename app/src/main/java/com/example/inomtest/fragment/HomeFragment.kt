@@ -33,11 +33,11 @@ class HomeFragment : Fragment() {
 
     private lateinit var accessToken: String
 
-    private var size = 1
+    private var size = 10
     private var itemId: String? = null
-    private var categoryId: String = ""
-    private var majorId: String = ""
-    private var searchWord: String = ""
+    private var categoryId: String? = null
+    private var majorId: String? = null
+    private var searchWord: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

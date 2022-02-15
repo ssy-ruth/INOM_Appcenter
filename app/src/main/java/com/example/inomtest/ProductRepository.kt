@@ -20,9 +20,9 @@ class ProductRepository {
         accessToken: String,
         size: Int,
         itemId: String?,
-        categoryId: String,
-        majorId: String,
-        searchWord: String) {
+        categoryId: String?,
+        majorId: String?,
+        searchWord: String?) {
         // parameter["page"] = page.toString()
 
         /*val paramObject = JSONObject()
