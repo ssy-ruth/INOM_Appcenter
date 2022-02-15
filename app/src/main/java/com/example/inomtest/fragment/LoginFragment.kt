@@ -33,6 +33,7 @@ class LoginFragment : Fragment() {
 
     lateinit var inuID : String
     lateinit var password : String
+    var accessToken: String = ""
 
     val bundle = Bundle()
 
@@ -58,9 +59,11 @@ class LoginFragment : Fragment() {
         binding.loginBtn.setOnClickListener{
             inuID = binding.loginIDEdit.text.toString()
             password = binding.loginPWEdit.text.toString()
-            login(inuID, password)
 
-            it.findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+            accessToken = login(inuID, password)
+            if (accessToken != "") {
+                it.findNavController().navigate(R.id.action_loginFragment_to_homeFragment, bundle)
+            }
         }
         binding.loginToSignup.setOnClickListener{
             it.findNavController().navigate(R.id.action_loginFragment_to_signupMainFragment)
@@ -82,12 +85,11 @@ class LoginFragment : Fragment() {
             }
     }
 
-    fun login(inuID: String, password: String) {
+    fun login(inuID: String, password: String) : String {
         var LoginData = LoginData()
         LoginData.inuId = inuID
         LoginData.password = password
         LoginData.pushToken = "pushToken"
-
 
         val paramObject = JSONObject()
         paramObject.put("inuId", inuID)
@@ -103,7 +105,8 @@ class LoginFragment : Fragment() {
 
                     Log.d("로그인결과1", "통신결과"+response.code().toString())
                     Log.d("액세스토큰", "통신결과"+response.headers().get("Authorization"))
-                    bundle.putString("accessToken", response.headers().get("Authorization"))
+                    accessToken = response.headers().get("Authorization").toString()
+                    bundle.putString("accessToken", accessToken)
                 }
 
                 else {
@@ -115,5 +118,7 @@ class LoginFragment : Fragment() {
                 Log.d("로그인결과3", "통신결과: $t")
             }
         })
+
+        return accessToken
     }
 }

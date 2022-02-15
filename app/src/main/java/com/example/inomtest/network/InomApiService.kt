@@ -1,7 +1,7 @@
 package com.example.inomtest.network
 
 import com.example.inomtest.BuildConfig
-import com.example.inomtest.dataClass.ProductItem
+import com.example.inomtest.dataClass.ItemData
 import com.example.inomtest.dataClass.LoginData
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -17,13 +17,21 @@ interface InomApiService {
     @GET("/api/items?size=10&itemId=1000&categoryId=10&majorId=10&searchWord=10")
     fun loadProducts(
         @Header("Authorization") accessToken: String,
-        @Query("page") page: String): Call<ProductItem>
+        @Query ("size") size: Int,
+        @Query ("itemId") itemId: String?,
+        @Query ("categoryId") categoryId: String,
+        @Query ("majorId") majorId: String,
+        @Query ("searchWord") searchWord: String,
+    )
+    : Call<List<ItemData>>
 
+    // 로그인
     @POST("/api/users/login")
     fun login(
         @Body jsonparams: RequestBody
     ): Call<Void>
 
+    // 회원가입
     @POST("/api/users")
     fun signUp(
         @Body jsonparams: RequestBody
@@ -69,8 +77,6 @@ object InomApi {
         return retrofit.create(
             InomApiService::class.java
         )
-
-
     }
 
 
