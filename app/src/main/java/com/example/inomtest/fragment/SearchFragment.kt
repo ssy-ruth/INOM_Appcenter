@@ -1,18 +1,18 @@
 package com.example.inomtest.fragment
 
-import android.app.SearchManager
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.Room
 import com.example.inomtest.*
+import com.example.inomtest.dataClass.room.OnDeleteListener
+import com.example.inomtest.dataClass.room.RecentSearchDAO
+import com.example.inomtest.dataClass.room.RecentSearchDatabase
+import com.example.inomtest.dataClass.room.RecentSearchEntity
 import com.example.inomtest.databinding.FragmentSearchBinding
 import com.example.inomtest.network.RetrofitManager
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDeleteListener {
+class SearchFragment : AppCompatActivity(), /*SearchView.OnQueryTextListener,*/ OnDeleteListener {
     private lateinit var binding: FragmentSearchBinding
     lateinit var navController: NavController
     private lateinit var searchAdapter: RecentSearchAdapter
@@ -35,20 +35,20 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
         binding = FragmentSearchBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-        db = Room.databaseBuilder(this,RecentSearchDatabase::class.java,"room_db")
+        db = Room.databaseBuilder(this, RecentSearchDatabase::class.java,"room_db")
             .build()
         searchDAO = db.recentSearchDAO()
         searchAdapter = RecentSearchAdapter(this,recentWordList, this)
 
         refreshAdapter()
 
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        binding.searchView.apply {
-            this.queryHint="검색어를 입력해주세요."
-            this.setOnQueryTextListener(this@SearchFragment)
-        }
+//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        binding.searchView.apply {
+//            this.queryHint="검색어를 입력해주세요."
+//            this.setOnQueryTextListener(this@SearchFragment)
+//        }
 
-        onQueryTextChange(newText = null)
+        //onQueryTextChange(newText = null)
         with(binding) {
             RecentWordList.adapter = searchAdapter
             RecentWordList.layoutManager = GridLayoutManager(this@SearchFragment, 2)
@@ -93,7 +93,7 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
         }
     }
     //room 데이터 추가
-    fun insertWord(searchWord:RecentSearchEntity){
+    fun insertWord(searchWord: RecentSearchEntity){
         CoroutineScope(Dispatchers.IO).launch {
             searchDAO.insert(searchWord)
             refreshAdapter()
@@ -109,22 +109,22 @@ class SearchFragment : AppCompatActivity(), SearchView.OnQueryTextListener, OnDe
 
     //서치뷰 검색어 입력 이벤트
     //키보드의 검색버튼 클릭 되었을때
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        Log.d(TAG, "SearchActivity - onQueryTextSubmit() called / query: $query")
-
-        this.binding.searchView.setQuery("", false)//서치뷰에 빈 값 넣고 검색은 안함
-        this.binding.searchView.clearFocus()//키보드가 내려감
-        //검색 api호출
-        //RetrofitManager.instance.searchWord(searchTerm = term)
-
-        return true
-    }
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        Log.d(TAG, "SearchActivity - onQueryTextChange() called / newText: $newText")
-
-        val userInputText = newText ?: ""//검색창에 무언가 있으면 그대로 넣고 없으면 ""을 넣음
-        return true
-    }
+//    override fun onQueryTextSubmit(query: String?): Boolean {
+//        Log.d(TAG, "SearchActivity - onQueryTextSubmit() called / query: $query")
+//
+//        this.binding.searchView.setQuery("", false)//서치뷰에 빈 값 넣고 검색은 안함
+//        this.binding.searchView.clearFocus()//키보드가 내려감
+//        //검색 api호출
+//        //RetrofitManager.instance.searchWord(searchTerm = term)
+//
+//        return true
+//    }
+//
+//    override fun onQueryTextChange(newText: String?): Boolean {
+//        Log.d(TAG, "SearchActivity - onQueryTextChange() called / newText: $newText")
+//
+//        val userInputText = newText ?: ""//검색창에 무언가 있으면 그대로 넣고 없으면 ""을 넣음
+//        return true
+//    }
 
 }

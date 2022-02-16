@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.inomtest.dataClass.room.OnDeleteListener
+import com.example.inomtest.dataClass.room.RecentSearchEntity
 import com.example.inomtest.databinding.ItemSearchRecentBinding
 
 class RecentSearchAdapter(val context: Context,
@@ -38,7 +40,7 @@ class RecentSearchAdapter(val context: Context,
 //        val recentWordDelete = binding.recentWordDelete
 //    }
     class Holder(val binding: ItemSearchRecentBinding):RecyclerView.ViewHolder(binding.root){
-        fun setWord(recentWord:RecentSearchEntity){
+        fun setWord(recentWord: RecentSearchEntity){
             binding.textviewRecentWord.text = recentWord.recentWord
         }
     val deleteHistory = binding.recentWordDelete

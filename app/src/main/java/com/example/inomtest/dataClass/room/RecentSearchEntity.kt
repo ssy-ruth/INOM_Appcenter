@@ -1,4 +1,4 @@
-package com.example.inomtest
+package com.example.inomtest.dataClass.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -4,18 +4,14 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import com.example.inomtest.dataClass.ItemData
-import com.example.inomtest.network.InomApi.baseUrl
-import com.google.gson.Gson
-import okhttp3.Interceptor
+import com.example.inomtest.dataClass.NotificationData
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
-import retrofit2.Retrofit.Builder
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -52,6 +48,11 @@ interface InomApiService {
         @Header("Authorization") accessToken: String,
         @Query("searchWord") searchTerm: String,
         @Query("size")size:Int): Call<List<ItemData>>
+
+    @GET("/api/notifications")
+    fun notification(
+        @Header("Authorization") accessToken: String,
+        @Query("notificationId") notificationId: Int): Call<List<NotificationData>>
 }
 
 object InomApi {

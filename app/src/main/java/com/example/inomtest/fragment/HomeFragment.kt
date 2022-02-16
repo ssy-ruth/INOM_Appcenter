@@ -140,7 +140,7 @@ class HomeFragment : Fragment() {
                     }
 
                     R.id.menu_noti -> {
-
+                        view.findNavController().navigate(R.id.action_homeFragment_to_notificationFragment)
                     }
 
                     R.id.menu_myPage -> {

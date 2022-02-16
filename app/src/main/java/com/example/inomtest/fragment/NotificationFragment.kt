@@ -1,60 +1,79 @@
 package com.example.inomtest.fragment
 
+import android.content.ContentValues
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.inomtest.NotificationAdapter
 import com.example.inomtest.R
+import com.example.inomtest.dataClass.DataNotification
+import com.example.inomtest.dataClass.NotificationData
+import com.example.inomtest.databinding.FragmentNotificationBinding
+import com.example.inomtest.network.App
+import com.example.inomtest.network.InomApi
+import com.example.inomtest.network.InomApiService
+import com.example.inomtest.network.RetrofitManager
+import retrofit2.Call
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NotificationFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NotificationFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentNotificationBinding? = null
+    private val binding get() = _binding!!
+    lateinit var navController: NavController
+    private val notifiAdapter = NotificationAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
         }
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification, container, false)
+        _binding = FragmentNotificationBinding.inflate(inflater, container, false)
+        return binding.root
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NotificationFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NotificationFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        //알림 api 호출
+        RetrofitManager.instance.notifiApi(completion = {
+                responseState, responseBody ->
+
+            when(responseState){
+                RetrofitManager.RESPONSE_STATE.OKAY->{
+                    Log.d(ContentValues.TAG,"api 호출 성공 : $responseBody")
+                    notifiAdapter
+                }
+                RetrofitManager.RESPONSE_STATE.FAIL->{
+                    Log.d(ContentValues.TAG,"api 호출 실패 : $responseBody")
                 }
             }
+        })
+        //리싸이클러뷰 설정
+        binding.notifiRecycler.apply {
+            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL,false)
+            adapter = notifiAdapter
+            addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))//선그어주기
+        }
+        binding.backBtn.setOnClickListener{
+            it.findNavController().navigate(R.id.action_notificationFragment_to_homeFragment)
+        }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

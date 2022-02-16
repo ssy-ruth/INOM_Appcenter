@@ -1,4 +1,4 @@
-package com.example.inomtest
+package com.example.inomtest.dataClass.room
 
 import androidx.room.Dao
 import androidx.room.Delete

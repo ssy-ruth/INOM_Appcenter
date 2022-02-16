@@ -36,6 +36,7 @@
         app:layout_constraintTop_toTopOf="@+id/top_bar" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notifiRecycler"
         android:layout_width="391dp"
         android:layout_height="779dp"
         tools:listitem="@layout/item_notification"
