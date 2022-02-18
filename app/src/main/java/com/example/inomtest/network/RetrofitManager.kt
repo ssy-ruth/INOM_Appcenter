@@ -10,8 +10,11 @@ import android.util.Log
 import android.widget.Toast
 import com.example.inomtest.dataClass.ItemData
 import com.example.inomtest.dataClass.NotificationData
+import com.example.inomtest.dataClass.ProductResult
 import com.example.inomtest.fragment.SearchFragment
 import com.google.gson.Gson
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Response
 
@@ -21,7 +24,7 @@ class RetrofitManager {
     }
 
     //검색 api 호출
-    fun searchWord(completion:(RESPONSE_STATE, String)->Unit){
+    fun searchWord(completion:(RESPONSE_STATE, ArrayList<ProductResult>?)->Unit){
         //레트로핏 인터페이스 가져오기
         val iRetrofit :InomApiService = InomApi.createApi()
 
@@ -32,26 +35,47 @@ class RetrofitManager {
         var term = searchTerm.let {
             it
         }?:""
-        val callSearch = iRetrofit.search(accessToken = access.toString(), searchTerm = term, size = 1).let{
+        val callSearch = iRetrofit.search(accessToken = access.toString(), searchTerm = term, size = 10).let{
             it
         }?: return
 
-        callSearch.enqueue(object: retrofit2.Callback<List<ItemData>>{
+        callSearch.enqueue(object: retrofit2.Callback<JsonElement>{
             //응답성공시
-            override fun onResponse(call: Call<List<ItemData>>, response: Response<List<ItemData>>) {
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 Log.d(TAG, "RetrofitMasager - onResponce() called / t ${response.raw()}")
                 if(response.code()!=200){
                     Toast.makeText(App.instance,"${response.code()} 에러입니다.",Toast.LENGTH_SHORT).show()
                 }else{
                     Log.d(TAG, "검색어 : $term, 토큰 : $access")
-                    completion(RESPONSE_STATE.OKAY, response.raw().toString())
+                    //정보 받아오기
+                    response.body()?.let {
+                        var parsedDataArray = ArrayList<ProductResult>()
+                        val body = it.asJsonArray
+                        body.forEach{ rItem ->
+                            val rItemObject = rItem.asJsonObject
+                            val thumbnail = rItemObject.get("mainImageUrl").asString
+                            val price = rItemObject.get("price").asInt
+                            val title = rItemObject.get("title").asString
+                            val likes = rItemObject.get("favoriteCount")?.asInt
+                            //Log.d(TAG,"$thumbnail $price $title $likes")
+                            val reItem = ProductResult(
+                                thumbnail = thumbnail,
+                                title = title,
+                                price = price,
+                                likes = likes?:0
+                            )
+                            parsedDataArray.add(reItem)
+                            //Log.d(TAG,"$reItem")
+                        }
+                        completion(RESPONSE_STATE.OKAY, parsedDataArray)
+                    }
                 }
             }
 
             //응답실패시
-            override fun onFailure(call: Call<List<ItemData>>, t: Throwable) {
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
                 Log.d(TAG, "RetrofitMasager - onResponce() called / t $t")
-                completion(RESPONSE_STATE.FAIL, t.toString())
+                completion(RESPONSE_STATE.FAIL, null)
             }
 
         })

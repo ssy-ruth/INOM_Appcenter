@@ -8,13 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inomtest.MainViewModel
 import com.example.inomtest.R
-import com.example.inomtest.RecyclerItemAdapter
+import com.example.inomtest.recyclerview.RecyclerItemAdapter
 import com.example.inomtest.dataClass.ItemData
 import com.example.inomtest.databinding.FragmentHomeBinding
 

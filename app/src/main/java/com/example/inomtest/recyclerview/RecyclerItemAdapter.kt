@@ -1,4 +1,4 @@
-package com.example.inomtest
+package com.example.inomtest.recyclerview
 
 
 import android.view.LayoutInflater

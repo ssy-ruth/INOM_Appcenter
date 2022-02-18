@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.example.inomtest.dataClass.ItemData
 import com.example.inomtest.dataClass.NotificationData
+import com.google.gson.JsonElement
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,7 +48,7 @@ interface InomApiService {
     fun search(
         @Header("Authorization") accessToken: String,
         @Query("searchWord") searchTerm: String,
-        @Query("size")size:Int): Call<List<ItemData>>
+        @Query("size")size:Int): Call<JsonElement>
 
     @GET("/api/notifications")
     fun notification(

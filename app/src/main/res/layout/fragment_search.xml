@@ -16,54 +16,62 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <SearchView
-            android:id="@+id/searchView"
+        <EditText
+            android:id="@+id/test_Edit"
+            android:ems="10"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            app:iconifiedByDefault="false"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/search_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:text="검색"
-            android:textSize="8sp"/>
-    </LinearLayout>
+            app:iconifiedByDefault="false"
+            android:layout_weight="1"/>
 
-    <TextView
-        android:id="@+id/textRecentWord"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/searchRecentWord"
-        android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchTab" />
+                <Button
+                    android:id="@+id/search_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="10dp"
+                    android:text="검색"
+                    android:textSize="8sp" />
+            </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RecentWordList"
+        android:id="@+id/searchResult"
         android:layout_width="match_parent"
-        tools:listitem="@layout/item_search_recent"
-        android:layout_height="250dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textRecentWord"/>
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/searchTab"/>" />
 
-    <EditText
-        android:id="@+id/test_Edit"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/recentHistory"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        app:layout_constraintBottom_toTopOf="@+id/RecentWordList"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textRecentWord"
-        app:layout_constraintTop_toBottomOf="@+id/searchTab" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/searchTab">
+
+        <TextView
+            android:id="@+id/textRecentWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/searchRecentWord"
+            android:textSize="15sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecentWordList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            tools:listitem="@layout/item_search_recent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
