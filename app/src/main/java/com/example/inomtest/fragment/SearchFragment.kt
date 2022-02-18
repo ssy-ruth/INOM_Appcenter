@@ -1,60 +1,120 @@
 package com.example.inomtest.fragment
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import com.example.inomtest.R
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
+import com.example.inomtest.dataClass.ProductResult
+import com.example.inomtest.dataClass.room.OnDeleteListener
+import com.example.inomtest.dataClass.room.RecentSearchDAO
+import com.example.inomtest.dataClass.room.RecentSearchDatabase
+import com.example.inomtest.dataClass.room.RecentSearchEntity
+import com.example.inomtest.databinding.FragmentSearchBinding
+import com.example.inomtest.network.RetrofitManager
+import com.example.inomtest.recyclerview.RecentSearchAdapter
+import com.example.inomtest.recyclerview.RecyclerItemAdapter
+import com.example.inomtest.recyclerview.SearchResultAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class SearchFragment : AppCompatActivity(), OnDeleteListener {
+    private lateinit var binding: FragmentSearchBinding
+    lateinit var navController: NavController
+    private lateinit var searchAdapter: RecentSearchAdapter
+    private lateinit var recylerAdapter: SearchResultAdapter
+    private lateinit var db : RecentSearchDatabase
+    private lateinit var searchDAO: RecentSearchDAO
+    private val recentWordList = mutableListOf<RecentSearchEntity>()
+    private var productList = ArrayList<ProductResult>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        binding = FragmentSearchBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
+        db = Room.databaseBuilder(this, RecentSearchDatabase::class.java,"room_db")
+            .build()
+        searchDAO = db.recentSearchDAO()
+        searchAdapter = RecentSearchAdapter(this,recentWordList, this)
+
+        refreshAdapter()
+
+        with(binding) {
+            RecentWordList.adapter = searchAdapter
+            RecentWordList.layoutManager = GridLayoutManager(this@SearchFragment, 2)
+
+            searchBtn.setOnClickListener {
+                val content = binding.testEdit.text.toString()
+                //검색어 api 호출부에 넘겨주기
+                val SharedPreferences = getSharedPreferences("access", MODE_PRIVATE)
+                val prefEdit = SharedPreferences.edit()
+                prefEdit?.putString("searchWord",content)
+                prefEdit?.apply()
+
+                if (content.isNotEmpty()) {
+                    val recentWord1 = RecentSearchEntity(null, content)
+                    insertWord(recentWord1)
+                    //검색 api호출
+                    RetrofitManager.instance.searchWord(completion = {
+                        responseState, responseBody ->
+                        productList = responseBody as ArrayList<ProductResult>
+
+                        //api 수신 후 화면에 표시
+                        when(responseState){
+                            RetrofitManager.RESPONSE_STATE.OKAY->{
+                                Log.d(TAG,"api 호출 성공 : ${productList.size}")
+                                searchResult.visibility = View.VISIBLE
+                                recentHistory.visibility = View.INVISIBLE
+                                recylerAdapter = SearchResultAdapter()
+                                recylerAdapter.submitList(productList)
+                                searchResult.adapter = recylerAdapter
+                                searchResult.layoutManager = LinearLayoutManager(this@SearchFragment)
+                            }
+                            RetrofitManager.RESPONSE_STATE.FAIL->{
+                                Toast.makeText(this@SearchFragment, "api 호출 에러입니다.",Toast.LENGTH_SHORT).show()
+                                Log.d(TAG,"api 호출 실패 : $responseBody")
+                            }
+                        }
+                    })
+                }
+            }
+        }
+
+
+    }
+    //room 데이터 수정사항 업데이트
+    fun refreshAdapter(){
+        CoroutineScope(Dispatchers.IO).launch {
+            recentWordList.clear()
+            recentWordList.addAll(searchDAO.getAll())
+            withContext(Dispatchers.Main){
+                searchAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+    //room 데이터 추가
+    fun insertWord(searchWord: RecentSearchEntity){
+        CoroutineScope(Dispatchers.IO).launch {
+            searchDAO.insert(searchWord)
+            refreshAdapter()
+        }
+    }
+    //리사이클러뷰 삭제 _ 어댑터 파일과 연결
+    override fun onDeleteListener(recentWord: RecentSearchEntity) {
+        CoroutineScope(Dispatchers.IO).launch {
+            searchDAO.delete(recentWord)
+            refreshAdapter()
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

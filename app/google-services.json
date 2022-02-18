@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "103973463645",
+    "project_id": "inomtest",
+    "storage_bucket": "inomtest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103973463645:android:dccf4f65ea7cbecd390fb4",
+        "android_client_info": {
+          "package_name": "com.example.inomtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "103973463645-cvm613ojqlhbh9795mgfd7g3ghj6dqrr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxT6-wa0cc5t3igx4Wh_IQ-3XxTRf7lhI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "103973463645-cvm613ojqlhbh9795mgfd7g3ghj6dqrr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
